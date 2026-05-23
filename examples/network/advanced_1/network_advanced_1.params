@@ -1,0 +1,58 @@
+## General
+logLevel=0   # full logging (very slow, huge files): 99999999
+debugLevel=0 # full debug (very slow, huge files): 99999999
+
+
+# links
+bandwidth=980000
+delay=0.001  # 0.01 ms
+
+# Router (Juniper QFX5200-32C-AFI)
+# buffer info: show class-of-service shared-buffer
+# egress:
+	# dedicated per port = 5408KB / 32 ports = 169KB  
+	# total shared = 11232 KB
+	# total per port = 169 + 11232 * percLossless KB
+Router1.bufferSize=2977000     #  (169 + 11232 * 0.25) * 1000
+
+#ingress:
+	# dedicated per port = 4860KB / 32 ports = 151.875KB  
+	# total shared = 11779.62 KB
+	# total per port = 151.875 + 11779.62 * percLossless KB
+Router2.bufferSize=9423700 #  #  9423.70 KB (80%lossy)
+
+
+# Flows
+FlowIds = {Flow1, Flow2}
+PacketFlowNames  = {Flow1, Flow2}
+
+## Flow: 10.147.0.16 --> 10.147.0.15 --> 10.147.0.16
+Flow1.route =          {Sender1, Router1, Receiver, Router2, Sender1} 
+Flow1.route.inPorts =  {0      , 0      , 0       , 0      , 0}
+Flow1.route.outPorts = {0      , 0      , 0       , 0      , 0}
+Flow1.typeOfService = 0
+Flow1.startStopTimes= {0}
+Flow1.period=0 # Constant distribution (parameter below)
+Flow1.period_value=99999999
+Flow1.packetSize=4  # Normal distribution (parameters below)
+Flow1.packetSize_mu=3624   # packets size will actually be 4000=500*8+tcpHeaders = 3624+376
+Flow1.packetSize_var=800   # var=100B
+
+
+## Flow: 10.147.0.17 --> 10.147.0.15 --> 10.147.0.17
+Flow2.route =          {Sender2, Router1, Receiver, Router2, Sender2} 
+Flow2.route.inPorts =  {0      , 1      , 0       , 0      , 0}
+Flow2.route.outPorts = {0      , 0      , 0       , 1      , 0}
+Flow2.typeOfService = 0
+Flow2.startStopTimes= {0}
+Flow2.period=0 # Constant distribution (parameter below)
+Flow2.period_value=99999999
+Flow2.packetSize=1 # Exponential distribution (parameter below)
+Flow2.packetSize_mu=2000
+
+# TCP
+MSS=1024
+
+# Variables to record (for plotting)
+TCP_SND.logLevel=1000 # log all cwnd
+queue.logLevel=1000 # log all queues

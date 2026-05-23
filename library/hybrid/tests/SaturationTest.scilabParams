@@ -1,0 +1,17 @@
+SimulationName = "SwitchAndSaturationTest";
+exec('../examples/common/Scilab/model.scilabParams', 0)
+
+// General
+ReproducibleSimu = REPRODUCIBLE_SEED;   // When using STDEVS, 1="Uses always the same random numbers (Reproducible) 0="Uses unique random numbers (generates a new seed). Any other value will be used as seed" 
+//ReproducibleSimu = UNIQUE_SEED;   // When using STDEVS, 1="Uses always the same random numbers (Reproducible) 0="Uses unique random numbers (generates a new seed). Any other value will be used as seed"
+
+samplingPeriodForPlots=0.01;
+
+// For sweeping parameters: ./RunNSimulations.sh -n <sizeParameterValues> -f <finalTime>
+ParameterNames = ["noSweeping"] ; // this must be changed in ScilabParameterSweeper::UpdateParameters
+
+ParameterValues = [-1];
+
+
+
+                                

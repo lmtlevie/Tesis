@@ -1,0 +1,104 @@
+Coupled
+    {
+    Type = Root
+    Name = basic
+    Ports = 0; 0
+    Description = 
+    Graphic
+        {
+        Position = 0; 0
+        Dimension = 600; 600
+        Direction = Right
+        Color = 15
+        Icon = 
+        Window = 5000; 5000; 5000; 5000
+        }
+    Parameters
+        {
+        }
+    System
+        {
+        Atomic
+            {
+            Name = DataHandler
+            Ports = 0 ; 1
+            Path = queueing/JobGenerator.h
+            Description = Generates jobs using a distribution for the rate and jobSize.
+            Graphic
+                {
+                Position = -13005 ; -1755
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %datanetworks%generator.png
+                }
+            Parameters
+                {
+                StartTime = Str; DataHandler.startTime ; 
+                Period = Str; DataHandler.period ; avg interleave time for job generation
+                AvgJobWeight = Str; DataHandler.jobSize ; Avg job weight
+                EventsThreshold = Str; DataHandler.stopThreshold ; stops simulation if 'StopAfterNEvents' events where already generated.
+                }
+            }
+        Atomic
+            {
+            Name = StorageHandler
+            Ports = 2 ; 2
+            Path = queueing/JobQueue.h
+            Description = In0 Incomming packets to queue\nIn1 Incoming signal to request dequeue\nOut0 Outgoing dequeued packets\nOut1 Outgoing queue lenght information\n\nQueues incoming packets and enqueues them as required by a\nexternal entity. FIFO Policy (FirstInFirstOut). Provides information\nits internal state.
+            Graphic
+                {
+                Position = -9255 ; -1605
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %datanetworks%queue.png
+                }
+            Parameters
+                {
+                MaxCapacity = Str; StorageHandler.maxCapacity ; Queue Capacity (-1 infinite capacity and no discards)
+                }
+            }
+        Atomic
+            {
+            Name = EventFilter
+            Ports = 1 ; 2
+            Path = queueing/ProcesorSharingServer.h
+            Description = The input port receives incoming jobs to be processed. \nThe first output port sends jobs once they finished processing. The second output ports sends rejected jobs (when the maximum capacity maxJobs is exceeded). \n\nThe model processes up to a maximum if max_capacity jobs in paralel sharing the processing capacity (servicePower) among all jobs equally. That is, if power=1 and a job with weight=1 arrives, it is processed after 1 second. If 2 jobs with weight=1 arrive simultaneouly, they will be both finish processing after 2 seconds.
+            Graphic
+                {
+                Position = -7155 ; -1830
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %datanetworks%server.png
+                }
+            Parameters
+                {
+                servicePower (c) = Str; EventFilter.servicePower ; The processing power of this server relative to the jobs.weight
+                maxJobs (theta) = Str; EventFilter.maxJobs ; Maximum number of jobs that can be proccessed simulataneously.
+                }
+            }
+        Line
+            {
+            Source = Cmp ;  1 ;  1 ; 0
+            Sink = Cmp ;  2 ;  1 ; -1
+            PointX = -12225 ; -9390 ; -9390
+            PointY = -1425 ; -1425 ; -1425
+            }
+        Line
+            {
+            Source = Cmp ;  2 ;  1 ; 0
+            Sink = Cmp ;  3 ;  1 ; -1
+            PointX = -8475 ; -7290 ; -7290
+            PointY = -1425 ; -1425 ; -1500
+            }
+        Line
+            {
+            Source = Cmp ;  3 ;  1 ; 0
+            Sink = Cmp ;  2 ;  2 ; -1
+            PointX = -6375 ; -6375 ; -9390 ; -9390
+            PointY = -1650 ; 0 ; 0 ; -1125
+            }
+        }
+    }

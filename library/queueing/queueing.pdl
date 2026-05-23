@@ -1,0 +1,143 @@
+Coupled
+    {
+    Type = Root
+    Name = Queueing
+    Ports = 0; 0
+    Description = 
+    Graphic
+        {
+        Position = 0; 0
+        Dimension = 600; 600
+        Direction = Right
+        Color = 15
+        Icon = %datanetworks%queue.png
+        Window = 5000; 5000; 5000; 5000
+        }
+    Parameters
+        {
+        }
+    System
+        {
+        Atomic
+            {
+            Name = ExperimenetTracker
+            Ports = 0 ; 0
+            Path = sinks/SimulationExperimentTracker.h
+            Description = Allows to use multiple simulation runs setting new parameter values in each run. It configures Scilab variables according to the current simunation number.\nThis model should run with 1st priority!!
+            Graphic
+                {
+                Position = -7350 ; -10455
+                Dimension = 465 ; 510
+                Direction = Right
+                Color = 15
+                Icon = %realtime%lcd.svg
+                }
+            Parameters
+                {
+                ScilabSimulationSetID = Str; SimulationName ; indicates the simulation set ID
+                ScilabSimulationCounterVariableName = Str; ExperimentNumber ; Name of the Scilab variable that indicates the simulation number.
+                ScilabParametersVariableName = Str; ParameterValues ; Name of the Scilab variable that contains the parameter values for each simulation
+                ScilabParametersValuesVariableName = Str; ParameterNames ; Name of the Scilab variable that contains the parameter names for each simulation
+                }
+            }
+        Atomic
+            {
+            Name = JobGenerator
+            Ports = 0 ; 1
+            Path = queueing/JobGenerator.h
+            Description = Generates jobs using a distribution for the rate and jobSize.
+            Graphic
+                {
+                Position = -10080 ; -7905
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %datanetworks%generator.png
+                }
+            Parameters
+                {
+                StartTime = Str; gen.startTime ; 
+                Period = Str; gen.period ; avg interleave time for job generation
+                AvgJobWeight = Str; gen.jobSize ; Avg job weight
+                EventsThreshold = Str; gen.stopThreshold ; stops simulation if 'StopAfterNEvents' events where already generated.
+                }
+            }
+        Atomic
+            {
+            Name = JobQueue
+            Ports = 2 ; 2
+            Path = queueing/JobQueue.h
+            Description = In0 Incomming packets to queue\nIn1 Incoming signal to request dequeue\nOut0 Outgoing dequeued packets\nOut1 Outgoing queue lenght information\n\nQueues incoming packets and enqueues them as required by a\nexternal entity. FIFO Policy (FirstInFirstOut). Provides information\nits internal state.
+            Graphic
+                {
+                Position = -7005 ; -7905
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %datanetworks%queue.png
+                }
+            Parameters
+                {
+                MaxCapacity = Str; q.maxCapacity ; Queue Capacity (-1 infinite capacity and no discards)
+                }
+            }
+        Atomic
+            {
+            Name = ProcesorSharing
+            Ports = 1 ; 2
+            Path = queueing/ProcesorSharingServer.h
+            Description = The input port receives incoming jobs to be processed. \nThe first output port sends jobs once they finished processing. The second output ports sends rejected jobs (when the maximum capacity maxJobs is exceeded). \n\nThe model processes up to a maximum if max_capacity jobs in paralel sharing the processing capacity (servicePower) among all jobs equally. That is, if power=1 and a job with weight=1 arrives, it is processed after 1 second. If 2 jobs with weight=1 arrive simultaneouly, they will be both finish processing after 2 seconds.
+            Graphic
+                {
+                Position = -3930 ; -7830
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %datanetworks%server.png
+                }
+            Parameters
+                {
+                servicePower = Str; ps_capacity ; The processing power (c or capacity) of this server relative to the jobs.weight
+                maxJobs = Str; ps_bufferSize ; Maximum number of jobs (theta) that can be proccessed simulataneously.
+                }
+            }
+        Atomic
+            {
+            Name = QueueSampler
+            Ports = 1 ; 0
+            Path = queueing/QueueSampler.h
+            Description = Samples the output produced by the jobQueue. Samples queueLenght and discards
+            Graphic
+                {
+                Position = -7095 ; -6045
+                Dimension = 690 ; 690
+                Direction = Right
+                Color = 15
+                Icon = %datanetworks%scilab.bmp
+                }
+            Parameters
+                {
+                SamplePeriod = Str; QueueSamplerRate ; in seconds
+                }
+            }
+        Atomic
+            {
+            Name = CounterSampler
+            Ports = 1 ; 0
+            Path = queueing/CounterSampler.h
+            Description = Counts incomming events, recoding only every samplerPeriod. It records max, min, avg, count for each period.
+            Graphic
+                {
+                Position = -4695 ; -6045
+                Dimension = 690 ; 690
+                Direction = Right
+                Color = 15
+                Icon = %datanetworks%scilab.bmp
+                }
+            Parameters
+                {
+                SamplePeriod = Str; CounterSamplerRate ; in seconds
+                }
+            }
+        }
+    }

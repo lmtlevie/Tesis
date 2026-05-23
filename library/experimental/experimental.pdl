@@ -1,0 +1,44 @@
+Coupled
+    {
+    Type = Root
+    Name = experimental
+    Ports = 0; 0
+    Description = 
+    Graphic
+        {
+        Position = 0; 0
+        Dimension = 600; 600
+        Direction = Right
+        Color = 15
+        Icon = 
+        Window = 5000; 5000; 5000; 5000
+        }
+    Parameters
+        {
+        }
+    System
+        {
+        Atomic
+            {
+            Name = QSS Integrator (w/ QSSplot)
+            Ports = 1 ; 1
+            Path = experimental/qss_advanced_integrator.h
+            Description = Quantized Integrator (QSS methods) with logartithmic quantization with QSS plot logging.
+            Graphic
+                {
+                Position = -1905 ; -1305
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %continuous%integrator.svg
+                }
+            Parameters
+                {
+                Method = Lst; 1%QSS%QSS2%QSS3%QSS4% ; 
+                dqmin = Str; 1e-1 ; minimum quantum (Scilab)
+                dqrel = Str; 1 ; relative quantum (0 : uniform) (Scilab)
+                x0 = Str; -0.159 ; Initial state (Scilab)
+                }
+            }
+        }
+    }

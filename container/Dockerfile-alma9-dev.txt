@@ -1,0 +1,63 @@
+# Version: 0.1
+# Date modified: 05/09/23
+
+FROM almalinux:9
+MAINTAINER James Maple <james.m@cern.ch>
+
+# Environment setup
+ARG USERNAME
+ENV SCILAB_VERSION=5.2.2
+
+# Update base image + Install packages
+RUN dnf update -y \
+    && dnf upgrade -y \
+    && dnf install -y epel-release \
+    && dnf update -y \
+    && dnf upgrade -y \
+    && dnf install -y \
+        make \
+        git \
+        boost-devel \
+        gcc-toolset-12 \
+        graphviz \
+        wget \
+        python3 \
+        python3-pip \
+        python3-devel \
+        qt6-qt3d-devel \
+        gsl-devel \
+        gnuplot \
+        hdf5-devel \
+        xclock \
+    && dnf clean all
+RUN pip install --upgrade pip; pip install pandas six h5py
+
+# Install scilab
+WORKDIR /opt/rh
+RUN wget http://www.scilab.org/download/$SCILAB_VERSION/scilab-$SCILAB_VERSION.bin.linux-x86_64.tar.gz -nv && \
+    tar xzf scilab-$SCILAB_VERSION.bin.linux-x86_64.tar.gz && \
+    rm -f scilab*.tar.gz && \
+    ln -s /opt/rh/scilab-$SCILAB_VERSION/bin/scilab /usr/bin/scilab
+WORKDIR /
+
+
+# Add py2pdevs to the PythonPath
+ENV PYTHONPATH "${PYTHONPATH}:/powerdevs/build/lib"
+ENV LD_LIBRARY_PATH "${LD_LIBRARY_PATH}:/powerdevs/build/lib"
+
+
+# X11 config
+RUN groupadd -g 1000 ${USERNAME} && useradd -s /bin/bash -m ${USERNAME} -u 1000 -g 1000
+USER ${USERNAME}
+
+
+# Start
+WORKDIR /powerdevs
+#ENTRYPOINT ["scl", "enable", "devtoolset-7", "bash"]
+
+
+
+
+
+
+

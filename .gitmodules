@@ -1,0 +1,3 @@
+[submodule "simuevdis"]
+	path = simuevdis
+	url = https://git.assembla.com/simuevdis.git

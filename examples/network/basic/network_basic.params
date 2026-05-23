@@ -1,0 +1,57 @@
+#### Parameters for the simulator  ####
+#tf = 1      # set default final time (can be overriden by command line -tf)
+#ti = 10     # Set initial time to t (double format).
+#i = 0       # Run interactive shell.
+#b = 0       # Stop simulation after n steps in the same time (to detect illegitimate models).
+#d = 0       # Debug simulation.
+#rt = 0      # Synchronize events with real time.
+
+ExperimentNumber = 0 # RunNumber is used for scanning parameters defined in ParameterValues. The value to be used is ParameterValues}ExperimentNumber]. It can be overriden by a commandLine parameter.
+
+## Backends
+parameter_reading_backend=CmdLine  # (CmdLine or Scilab) - Backend to be used for reading parameters in atomic models
+variable_logging_backend=Scilab  # (OpenTsdb or Scilab) - Backend to be used for logging variables in atomic models
+
+## General
+ReproducibleSimu = 0 # When using STDEVS, REPRODUCIBLE_SEED = 0 (Uses always the same random numbers) UNIQUE_SEED = -1(Uses unique random numbers (generates a new seed))
+SimulationName = packet_ECNTcpSnd1Rcv
+
+# Parameter sweeping
+ParameterNames = { "XXX" } #
+ParameterValues = { 1 } #
+
+# Levels for logging of variables time-series, and for debug messages in the logfile 
+logLevel=0
+debugLevel=0
+
+MSS=1024
+fastLink=10000000
+slowLink=5000000
+queueSize=500000
+
+# define the flows (paths and sizes for the generated packets)
+FlowIds={Sender} # Name of each flow. For each defined flow name, there must be variables starting with the flow name defining its attributes. Eg: <flowName>.route
+PacketFlowNames = {Sender}
+
+Sender.route =          {Sender, Router, Receiver}
+Sender.route.inPorts =  {0     , 0     , 0}
+Sender.route.outPorts = {0     , 0     , 0}
+Sender.typeOfService = 0
+Sender.period=0
+Sender.period_value=99999999
+Sender.packetSize=4  # DISTRIBUTION_NORMAL
+Sender.packetSize_mu=3624   # packets size will actually be 4000=500*8+tcpHeaders = 3624+376
+Sender.packetSize_sigma=800   # var=100B
+Sender.startStopTimes= {0}
+
+#log level
+TCP_SND.logLevel=1000 # log all cwnd
+queue.logLevel=1000 # log all queues
+
+
+# log samplers
+Sender.sent.size_bits.logLevel=99999999
+Sender.sent.size_bits.logger=2
+Sender.sent.size_bits.sample_period=0.1
+
+

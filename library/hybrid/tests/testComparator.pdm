@@ -1,0 +1,458 @@
+Coupled
+    {
+    Type = Root
+    Name = testComparator
+    Ports = 0; 0
+    Description = 
+    Graphic
+        {
+        Position = 0; 0
+        Dimension = 600; 600
+        Direction = Right
+        Color = 15
+        Icon = 
+        Window = 5000; 5000; 5000; 5000
+        }
+    Parameters
+        {
+        }
+    System
+        {
+        Atomic
+            {
+            Name = LoadScilabParams
+            Ports = 1 ; 0
+            Path = sink/RunScilabJob.h
+            Description = If Scilab is configured as backed in the cmd line options, this model runs Scilab commands at Init, Exit and when receive events.\n
+            Graphic
+                {
+                Position = -2850 ; -7440
+                Dimension = 615 ; 630
+                Direction = Right
+                Color = 15
+                Icon = %sinks%scilab.ico
+                }
+            Parameters
+                {
+                Run at Init = Str; exec('../library/hybrid/tests/Scilab/testComparator.scilabParams', 0) ; Scilab Job at Init
+                Run at External = Str;  ; Scilab Job when receive event
+                Run at Exit = Str;  ; Scilab Job at Exit
+                }
+            }
+        Atomic
+            {
+            Name = ExperimenetTracker
+            Ports = 0 ; 0
+            Path = sink/SimulationExperimentTracker.h
+            Description = Allows to use multiple simulation runs setting new parameter values in each run. It configures Scilab variables according to the current simunation number.\nThis model should run with 1st priority!!
+            Graphic
+                {
+                Position = -255 ; -7425
+                Dimension = 360 ; 300
+                Direction = Right
+                Color = 15
+                Icon = %realtime%lcd.svg
+                }
+            Parameters
+                {
+                ScilabSimulationSetID = Str; SimulationName ; indicates the simulation set ID
+                ScilabSimulationCounterVariableName = Str; ExperimentNumber ; Name of the Scilab variable that indicates the simulation number.
+                ScilabParametersVariableName = Str; ParameterValues ; Name of the Scilab variable that contains the parameter values for each simulation
+                ScilabParametersValuesVariableName = Str; ParameterNames ; Name of the Scilab variable that contains the parameter names for each simulation
+                }
+            }
+        Atomic
+            {
+            Name = UpdateScilabParams
+            Ports = 1 ; 0
+            Path = sink/RunScilabJob.h
+            Description = If Scilab is configured as backed in the cmd line options, this model runs Scilab commands at Init, Exit and when receive events.\n
+            Graphic
+                {
+                Position = 2070 ; -7530
+                Dimension = 525 ; 510
+                Direction = Right
+                Color = 15
+                Icon = %sinks%scilab.ico
+                }
+            Parameters
+                {
+                Run at Init = Str;  ; Scilab Job at Init
+                Run at External = Str;  ; Scilab Job when receive event
+                Run at Exit = Str;  ; Scilab Job at Exit
+                }
+            }
+        Atomic
+            {
+            Name = CustomSteps
+            Ports = 0 ; 1
+            Path = sources/CustomSteps.h
+            Description = Atomic DEVS model
+            Graphic
+                {
+                Position = -5205 ; -2880
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = None
+                }
+            Parameters
+                {
+                timesChanges = Str; stepTimeChanges ; 
+                ValueChanges = Str; stepValueChanges ; 
+                ValueChanges1 = Str; stepValueChanges1 ; 1st derivative (if "" 0 is assumend)
+                ValueChanges2 = Str; stepValueChanges2 ; 2nd derivative (if "" 0 is assumend)
+                ValueChanges3 3rd derivative = Str; stepValueChanges3 ; if "" 0 is assumend
+                }
+            }
+        Coupled
+            {
+            Type = Coordinator
+            Name = bi.f_der
+            Ports = 1; 0
+            Description = Coupled DEVS model
+            Graphic
+                {
+                Position = -3060; -5010
+                Dimension = 435; 570
+                Direction = Up
+                Color = 15
+                Icon = %sinks%workspace.bmp
+                Window = 5000; 5000; 5000; 5000
+                }
+            Parameters
+                {
+                }
+            System
+                {
+                Inport
+                    {
+                    Name = Inport0
+                    CoupledPort = 1
+                    Description = 
+                    Graphic
+                        {
+                        Position = -7065 ; 6675
+                        Dimension = 480
+                        Direction = Right
+                        }
+                    }
+                Atomic
+                    {
+                    Name = value
+                    Ports = 1 ; 0
+                    Path = Sink\toscilab_offline.h
+                    Description = Sends input signal to Scilab Workspace
+                    Graphic
+                        {
+                        Position = -4110 ; 7650
+                        Dimension = 570 ; 600
+                        Direction = Right
+                        Color = 15
+                        Icon = %Sinks%workspace.bmp
+                        }
+                    Parameters
+                        {
+                        }
+                    }
+                Atomic
+                    {
+                    Name = sample2plot
+                    Ports = 1 ; 1
+                    Path = qss/samplehold.h
+                    Description = Sample and hold
+                    Graphic
+                        {
+                        Position = -4080 ; 6270
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %hybrid%samphold.svg
+                        }
+                    Parameters
+                        {
+                        T = Str; samplingPeriodForPlots ; Sampling period (Scilab expression)
+                        phi = Str; 0 ; Delay (Scilab expression)
+                        }
+                    }
+                Atomic
+                    {
+                    Name = sampledValue
+                    Ports = 1 ; 0
+                    Path = Sink\toscilab_offline.h
+                    Description = Sends input signal to Scilab Workspace
+                    Graphic
+                        {
+                        Position = -2010 ; 6435
+                        Dimension = 735 ; 645
+                        Direction = Right
+                        Color = 15
+                        Icon = %Sinks%workspace.bmp
+                        }
+                    Parameters
+                        {
+                        }
+                    }
+                Point
+                    {
+                    ConectedLines = 2 ; 3 ; 4
+                    ConectedExtrems = Org ; Org ; Org
+                    Position = -4755 ; 6675
+                    }
+                Line
+                    {
+                    Source = Cmp ;  2 ;  1 ; 0
+                    Sink = Cmp ;  3 ;  1 ; -1
+                    PointX = -3300 ; -2190 ; -2190
+                    PointY = 6600 ; 6600 ; 6750
+                    }
+                Line
+                    {
+                    Source = Cmp ;  1 ;  1 ; -1
+                    Sink = Pnt ;  1 ; -1 ; 0
+                    PointX = -4290 ; -4755 ; -4755
+                    PointY = 7950 ; 7950 ; 6675
+                    }
+                Line
+                    {
+                    Source = Prt ;  1 ;  1 ; 0
+                    Sink = Pnt ;  1 ; -1 ; 0
+                    PointX = -6450 ; -4755 ; -4755
+                    PointY = 6675 ; 6675 ; 6675
+                    }
+                Line
+                    {
+                    Source = Pnt ;  1 ; -1 ; 0
+                    Sink = Cmp ;  2 ;  1 ; -1
+                    PointX = -4755 ; -4755 ; -4230
+                    PointY = 6675 ; 6615 ; 6615
+                    }
+                }
+            }
+                Coupled
+                    {
+                    Type = Coordinator
+                    Name = bi.f
+                    Ports = 1; 0
+                    Description = Coupled DEVS model
+                    Graphic
+                        {
+                        Position = 1185; -1260
+                        Dimension = 630; 585
+                        Direction = Right
+                        Color = 15
+                        Icon = %sinks%workspace.bmp
+                        Window = 5000; 5000; 5000; 5000
+                        }
+                    Parameters
+                        {
+                        }
+                    System
+                        {
+                        Inport
+                            {
+                            Name = Inport0
+                            CoupledPort = 1
+                            Description = 
+                            Graphic
+                                {
+                                Position = -7065 ; 6675
+                                Dimension = 480
+                                Direction = Right
+                                }
+                            }
+                        Atomic
+                            {
+                            Name = value
+                            Ports = 1 ; 0
+                            Path = Sink\toscilab_offline.h
+                            Description = Sends input signal to Scilab Workspace
+                            Graphic
+                                {
+                                Position = -4110 ; 7650
+                                Dimension = 570 ; 600
+                                Direction = Right
+                                Color = 15
+                                Icon = %Sinks%workspace.bmp
+                                }
+                            Parameters
+                                {
+                                }
+                            }
+                        Atomic
+                            {
+                            Name = sample2plot
+                            Ports = 1 ; 1
+                            Path = qss/samplehold.h
+                            Description = Sample and hold
+                            Graphic
+                                {
+                                Position = -4080 ; 6270
+                                Dimension = 675 ; 675
+                                Direction = Right
+                                Color = 15
+                                Icon = %hybrid%samphold.svg
+                                }
+                            Parameters
+                                {
+                                T = Str; samplingPeriodForPlots ; Sampling period (Scilab expression)
+                                phi = Str; 0 ; Delay (Scilab expression)
+                                }
+                            }
+                        Atomic
+                            {
+                            Name = sampledValue
+                            Ports = 1 ; 0
+                            Path = Sink\toscilab_offline.h
+                            Description = Sends input signal to Scilab Workspace
+                            Graphic
+                                {
+                                Position = -2010 ; 6435
+                                Dimension = 735 ; 645
+                                Direction = Right
+                                Color = 15
+                                Icon = %Sinks%workspace.bmp
+                                }
+                            Parameters
+                                {
+                                }
+                            }
+                        Point
+                            {
+                            ConectedLines = 2 ; 3 ; 4
+                            ConectedExtrems = Org ; Org ; Org
+                            Position = -4755 ; 6675
+                            }
+                        Line
+                            {
+                            Source = Cmp ;  2 ;  1 ; 0
+                            Sink = Cmp ;  3 ;  1 ; -1
+                            PointX = -3300 ; -2190 ; -2190
+                            PointY = 6600 ; 6600 ; 6750
+                            }
+                        Line
+                            {
+                            Source = Cmp ;  1 ;  1 ; -1
+                            Sink = Pnt ;  1 ; -1 ; 0
+                            PointX = -4290 ; -4755 ; -4755
+                            PointY = 7950 ; 7950 ; 6675
+                            }
+                        Line
+                            {
+                            Source = Prt ;  1 ;  1 ; 0
+                            Sink = Pnt ;  1 ; -1 ; 0
+                            PointX = -6450 ; -4755 ; -4755
+                            PointY = 6675 ; 6675 ; 6675
+                            }
+                        Line
+                            {
+                            Source = Pnt ;  1 ; -1 ; 0
+                            Sink = Cmp ;  2 ;  1 ; -1
+                            PointX = -4755 ; -4755 ; -4230
+                            PointY = 6675 ; 6615 ; 6615
+                            }
+                        }
+                    }
+                        Atomic
+                            {
+                            Name = 00
+                            Ports = 0 ; 1
+                            Path = sources\constant_sci.h
+                            Description = Constant
+                            Graphic
+                                {
+                                Position = -3330 ; 195
+                                Dimension = 675 ; 675
+                                Direction = Right
+                                Color = 15
+                                Icon = %sources%constant.svg
+                                }
+                            Parameters
+                                {
+                                K = Str; 0 ; Constant output value (Scilab expression)
+                                }
+                            }
+                        Atomic
+                            {
+                            Name = comparator
+                            Ports = 2 ; 1
+                            Path = qss/compare_old.h
+                            Description = The output is yu when u0>u1. Otherwise, the output is yl.
+                            Graphic
+                                {
+                                Position = -1530 ; -1155
+                                Dimension = 675 ; 675
+                                Direction = Right
+                                Color = 15
+                                Icon = %hybrid%comparator.svg
+                                }
+                            Parameters
+                                {
+                                yl = Str; 1 ; Low level (Scilab expression)
+                                yu = Str; 0 ; Upper level (Scilab expression)
+                                }
+                            }
+                        Atomic
+                            {
+                            Name = FinalizationCommands
+                            Ports = 0 ; 0
+                            Path = sink/multipleSimulationCommands.h
+                            Description = Executes Scilab commands when using multiple simulation runs (at the end of each simulation, and at the end of ALL simulations).\nThis model should run with LAST priority
+                            Graphic
+                                {
+                                Position = 4440 ; -7560
+                                Dimension = 570 ; 570
+                                Direction = Right
+                                Color = 15
+                                Icon = %datanetworks%scilab.bmp
+                                }
+                            Parameters
+                                {
+                                initSimulationCommandName = Str;  ; 
+                                eachSimulationCommandName = Str;  ; 
+                                lastSimulationCommandName = Str;  ; 
+                                }
+                            }
+                        Point
+                            {
+                            ConectedLines = 1 ; 2 ; 3
+                            ConectedExtrems = Org ; Org ; Org
+                            Position = -2850 ; -2550
+                            }
+                        Line
+                            {
+                            Source = Cmp ;  5 ;  1 ; -1
+                            Sink = Pnt ;  1 ; -1 ; 0
+                            PointX = -2850 ; -2850 ; -2850
+                            PointY = -4335 ; -4335 ; -2550
+                            }
+                        Line
+                            {
+                            Source = Pnt ;  1 ; -1 ; 0
+                            Sink = Cmp ;  4 ;  1 ; 0
+                            PointX = -2850 ; -2850 ; -2850 ; -4425
+                            PointY = -2550 ; -2550 ; -2550 ; -2550
+                            }
+                        Line
+                            {
+                            Source = Cmp ;  8 ;  1 ; -1
+                            Sink = Pnt ;  1 ; -1 ; 0
+                            PointX = -1665 ; -2850 ; -2850
+                            PointY = -975 ; -975 ; -2550
+                            }
+                        Line
+                            {
+                            Source = Cmp ;  8 ;  2 ; -1
+                            Sink = Cmp ;  7 ;  1 ; 0
+                            PointX = -1665 ; -2550 ; -2550
+                            PointY = -675 ; -675 ; 525
+                            }
+                        Line
+                            {
+                            Source = Cmp ;  6 ;  1 ; -1
+                            Sink = Cmp ;  8 ;  1 ; 0
+                            PointX = 1035 ; -750 ; -750
+                            PointY = -975 ; -975 ; -825
+                            }
+        }
+    }

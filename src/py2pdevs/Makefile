@@ -1,0 +1,87 @@
+include ../Makefile.defs
+
+# PowerDEVS directories
+UTILS_PATH = ../src/utils
+ENGINE_PATH = ../engine/common
+ATOMICS_PATH = ../../atomics
+MODEL_LIBRARY_PATH = ../../library 
+BIN_PATH = ../../bin
+LIB_DIR = ../../build/lib
+INCLUDE_DIR = ../../build/include
+
+# Py2PDEVS directories
+PY2PDEVS_ROOT = $(LIB_DIR)/py2pdevs
+PARAMS_DIR = $(PY2PDEVS_ROOT)/params
+NETWORK_DIR = $(PY2PDEVS_ROOT)/network
+NETWORK_PLOT_DIR = $(PY2PDEVS_ROOT)/network_plot
+LIBRARY_DIR = $(PY2PDEVS_ROOT)/library
+CORE_DIR = $(PY2PDEVS_ROOT)/core
+
+MODULE_IN  = module.cpp.in
+MODULE_OUT = module.cpp
+
+CPP_FILES = $(filter-out $(MODULE_OUT), $(wildcard *.cpp)) # module.cpp might exist or not at this point. Exclude it here, and force it the $(TARGET) explicitly
+H_FILES = $(wildcard *.h)
+
+PY_FILES = $(wildcard python/*.py)
+
+CXXFLAGS  += -shared 
+INCLUDES  = -I/usr/include/python2.7 -I$(ENGINE_PATH) -I$(ATOMICS_PATH) -I$(UTILS_PATH) -I$(INCLUDE_DIR) -I..
+
+#ifeq ($(shell lsb_release -si),Ubuntu)
+ifeq ($(shell grep -oP '^ID=\K.+' /etc/os-release),ubuntu)
+    LIBS = -L$(LIB_DIR) -lengine -lmodels -lutils -lhdf5_serial -lboost_python -lboost_program_options -lboost_system -lgsl -lgslcblas -Wl,-rpath=$(shell pwd)/$(LIB_DIR)
+# else ifeq ($(shell lsb_release -si),Debian)
+else ifeq ($(shell grep -oP '^ID=\K.+' /etc/os-release),debian)
+    LIBS = -L$(LIB_DIR) -lengine -lmodels -lutils -lhdf5_serial -lboost_python -lboost_program_options -lboost_system -lgsl -lgslcblas -Wl,-rpath=$(shell pwd)/$(LIB_DIR)
+else
+    LIBS = -L$(LIB_DIR) -lengine -lmodels -lutils -lhdf5 -lboost_python -lboost_program_options -lboost_system -lgsl -lgslcblas -Wl,-rpath=$(shell pwd)/$(LIB_DIR)
+endif
+
+TARGET  = $(CORE_DIR)/py2pdevs_core.so
+
+ATOMICS = $(shell find $(ATOMICS_PATH) -maxdepth 5 -type d -not -path modelica)
+ATOMICS_H = $(foreach subdir, $(ATOMICS), $(wildcard $(subdir)/*.h))
+
+# .pdl files to generate py2pdevs libraries
+MODEL_LIBRARIES = $(shell find $(MODEL_LIBRARY_PATH) -maxdepth 5 -type d)
+MODEL_LIBRARIES_PDL = $(foreach subdir, $(MODEL_LIBRARIES), $(wildcard $(subdir)/*.pdl))
+#MODEL_LIBRARIES_PY_ =  $(MODEL_LIBRARIES_PDL:.pdl=.py)
+#MODEL_LIBRARIES_PY = $(addprefix $(PY2PDEVS_ROOT)/library/, $(notdir $(MODEL_LIBRARIES_PY_)))
+
+all: $(TARGET) setup
+
+$(TARGET): $(MODULE_OUT) $(CPP_FILES) $(H_FILES)
+	@mkdir -p $(CORE_DIR)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(CPP_FILES) $(MODULE_OUT) $(LIBS) -o $(TARGET)		
+	
+setup: $(PY_FILES)	gen_py_lib
+	@mkdir -p $(PY2PDEVS_ROOT)
+	@mkdir -p $(CORE_DIR)
+	@touch $(PY2PDEVS_ROOT)/__init__.py
+	@echo "from py2pdevs_core import *" > $(CORE_DIR)/__init__.py
+	@cp -r python/params $(PY2PDEVS_ROOT)
+	@cp -r python/common $(PY2PDEVS_ROOT)
+	@cp -r python/network $(PY2PDEVS_ROOT)
+	@cp -r python/network_plot $(PY2PDEVS_ROOT)
+	
+# generate py2pdevs libraries based on pdl files	
+gen_py_lib: $(MODEL_LIBRARIES_PDL)
+	@cp -r python/library $(PY2PDEVS_ROOT)	
+	for file in $^ ; do \
+		../../bin/pdppt -p $${file} ; \
+	done
+#@../../bin/pdppt -p /powerdevs/library/hybrid_network/hybridnetworks.pdl	
+#@echo "--------------Files:" $^
+#@../../bin/pdppt -p ../../library/hybrid_network/hybrid_network.pdl
+#$(PY2PDEVS_ROOT)/library/%.py: 
+	
+	
+$(MODULE_OUT): $(MODULE_IN) $(ATOMICS_H)
+	@tools/codegen.py --input $< --output $@ --atomics-dir ../../atomics
+	
+test: $(TARGET) setup
+	@python python/run_tests.py
+
+clean:
+	rm -rf $(PY2PDEVS_ROOT)

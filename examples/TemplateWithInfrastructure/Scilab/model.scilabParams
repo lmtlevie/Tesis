@@ -1,0 +1,15 @@
+exec("../examples/common/Scilab/model.scilabParams', 0);
+exec('../examples/TemplateWithInfrastructure/Scilab/metrics.sce', 0); // 
+
+// General
+StochasticSimu = 1;     // 1=YES (use STDEVS), 0=NO (use means as constant values).
+ReproducibleSimu = REPRODUCIBLE_SEED;   // When using STDEVS, 1="Uses always the same random numbers (Reproducible) 0="Uses unique random numbers (generates a new seed). Any other value will be used as seed" 
+SimulationName = "TemplateModelName";
+
+// Main parameters
+
+// For sweeping parameters: ./RunNSimulations.sh -n <sizeParameterValues> -f <finalTime>
+// Override these if necessary
+//ParameterNames = ["variableName"] ; // this must be changed in ScilabParameterSweeper::UpdateParameters
+//ParameterValues = [1 , 903.666 ]^-1;
+

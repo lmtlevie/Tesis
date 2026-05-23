@@ -1,0 +1,14 @@
+# Complete this file to provide custom compilation flags, include paths or
+# libraries when compiling and linking the model.
+
+# List of gcc flags
+# e.g., -mavx2 -fno-stack-protector
+USERCXXFLAGS = 
+
+# List of include paths
+# e.g., -I/home/user/my_includes -I/home/user/other_includes
+USERINCLUDES =
+
+# List of libraries to link the model with
+# e.g., -L/home/user/my_library_path -lmy_library
+USERLIBS     =

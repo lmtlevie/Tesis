@@ -1,0 +1,44 @@
+//CPP:signal_bus/net_fluid_flow/FluidFlowRoutingTable.cpp
+
+#ifndef FluidFlowRoutingTable_H_
+#define FluidFlowRoutingTable_H_
+
+#include <memory>
+#include <stdlib.h>
+#include <map>
+
+#include "sinks/ParameterReader.h"
+
+using namespace std;
+
+/**
+ * Definition of fluid flow routes.
+ * Routes are read from configuration as a sorted list of <nodeName, outgoingPort>.
+ *
+ *  A static table that relates <nodeName, inputPort, FlowId> with a <outPort>
+ */
+class FluidFlowRoutingTable {
+
+/** Static methods/fields to read route definitions  **/
+private:
+//	struct RoutingTableKey{
+//		std::string nodeName;
+//		std::string flowId;
+//	};
+
+	// Although it is similar mechanism, we keep separated the demultilpexing from routing.
+	static map<string, map<string, int>> RoutingTable; // {NodeName, FlowId} --> outgoingPort
+//	static std::map<std::string, int> DemuxPorts; // {FlowId} --> demuxPort
+
+	static void defineRoutes();
+public:
+	/** returns the outgoing port for a given server+flow (used by routers)**/
+	static int getOutgoingPort(const std::string& nodeName, const std::string& flowId /*, int inputPort*/);
+
+	/** returns the demultiplexnig outgoing port. Used by demultiplexers to know which port to use per each flow**/
+	static int getDemultiplexingPort(const std::string& flowId );
+};
+
+
+
+#endif /* FluidFlowRoutingTable_H_ */

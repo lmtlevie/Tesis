@@ -1,0 +1,87 @@
+#include <boost/python/module.hpp>
+#include <boost/python/def.hpp>
+#include <boost/shared_ptr.hpp>
+
+#include "engine.h"
+#include "interface.h"
+#include "wrappers.h"
+
+#include "general/BaseSimulator.h"
+#include "py2pdevs_model.h"
+
+#include "network/Vector_packetRED_AQM.h"
+#include "network/Vector_packetRED_AQM_ECN.h"
+#include "network/Vector_packetqueue.h"
+#include "network/Vector_packetqueue_simple.h"
+
+// Atomic model includes follow
+
+// TODO: remove this global variable from the engine!
+//double tf = 0;
+
+using namespace boost::python;
+
+
+BOOST_PYTHON_MODULE(py2pdevs_core)
+{
+    def("run_scilab_script", run_scilab_script);
+    def("set_options", set_options);
+
+    // Model interface
+    def("new_model", new_model, return_value_policy<manage_new_object>());
+
+    class_<SimulatorWrapper, boost::noncopyable>("Simulator")
+        .def("init", &SimulatorWrapper::init_from_list_2, &SimulatorWrapper::default_init)
+        .def("dint", pure_virtual(&Simulator::dint))
+        .def("lambda", pure_virtual(&Simulator::lambda))
+        .def("dext", pure_virtual(&Simulator::dext))
+        .def("ta", pure_virtual(&Simulator::ta))
+        .def("get_name", make_getter(static_cast<const char* Simulator::*>(&Simulator::name)))
+        .def_readonly("index", &Simulator::myself);
+
+    class_<BaseSimulatorWrapper, boost::noncopyable, bases<Simulator>>("BaseSimulator", init<const char*>())
+        .def("dint", pure_virtual(&BaseSimulator::dint))
+        .def("lambda", pure_virtual(&BaseSimulator::lambda))
+        .def("dext", pure_virtual(&BaseSimulator::dext));
+
+    class_<CouplingWrapper, boost::shared_ptr<Coupling>, boost::noncopyable, bases<Simulator>>("Coupling", init<const char*>())
+        .def("dint", pure_virtual(&BaseSimulator::dint))
+        .def("lambda", pure_virtual(&BaseSimulator::lambda))
+        .def("dext", pure_virtual(&BaseSimulator::dext));
+
+    class_<RootCoupling, bases<Coupling> >("RootCoupling", init<char*>());
+
+    /*
+     * IMPORTANT: VectorialModel is a template class. For the moment any new
+     * instance of this class should be manually added in module.cpp.in and wrappers.h.
+     */    
+    class_<VectorialModel_packetRED_AQM_Wrapper, boost::shared_ptr<Vector_packetRED_AQM>, boost::noncopyable, bases<Simulator> >("Vectorial_packetRED_AQM", init<char*>())
+        .def("get_parameter_count", pure_virtual(&VectorialModel_packetRED_AQM_Wrapper::getParameterCount));
+
+    class_<VectorialModel_packetRED_AQM_ECN_Wrapper, boost::shared_ptr<Vector_packetRED_AQM_ECN>, boost::noncopyable, bases<Simulator> >("Vectorial_packetRED_AQM_ECN", init<char*>())
+        .def("get_parameter_count", pure_virtual(&VectorialModel_packetRED_AQM_ECN_Wrapper::getParameterCount));
+
+    class_<VectorialModel_packetqueue_Wrapper, boost::shared_ptr<Vector_packetqueue>, boost::noncopyable, bases<Simulator> >("Vectorial_packetqueue", init<char*>())
+        .def("get_parameter_count", pure_virtual(&VectorialModel_packetqueue_Wrapper::getParameterCount));
+
+    class_<VectorialModel_packetqueue_simple_Wrapper, boost::shared_ptr<Vector_packetqueue_simple>, boost::noncopyable, bases<Simulator> >("Vectorial_packetqueue_simple", init<char*>())
+        .def("get_parameter_count", pure_virtual(&VectorialModel_packetqueue_simple_Wrapper::getParameterCount));
+
+
+    class_<Vector_packetRED_AQM, bases<VectorialModel<packetRED_AQM>> >("Vector_packetRED_AQM", init<char*>());
+    class_<Vector_packetRED_AQM_ECN, bases<VectorialModel<packetRED_AQM_ECN>> >("Vector_packetRED_AQM_ECN", init<char*>());
+    class_<Vector_packetqueue, bases<VectorialModel<packetqueue>> >("Vector_packetqueue", init<char*>());
+    class_<Vector_packetqueue_simple, bases<VectorialModel<packetqueue_simple>> >("Vector_packetqueue_simple", init<char*>());
+ 
+    class_<Py2PDEVSModel>("Model", init<double, const py_str&>()) 
+        .def("create_coupled", &Py2PDEVSModel::create_coupled)
+        .def("connect_models", &Py2PDEVSModel::connect_models)
+        .def("connect_input_to_model", &Py2PDEVSModel::connect_input_to_model)
+        .def("connect_model_to_output", &Py2PDEVSModel::connect_model_to_output)
+        .def("top", &Py2PDEVSModel::get_top, return_value_policy<reference_existing_object>())
+        .def("run", &Py2PDEVSModel::run)
+        .def("create_vector_packetRED_AQM", &Py2PDEVSModel::create_atomic<Vector_packetRED_AQM>)
+        .def("create_vector_packetRED_AQM_ECN", &Py2PDEVSModel::create_atomic<Vector_packetRED_AQM_ECN>)
+        .def("create_vector_packetqueue_simple", &Py2PDEVSModel::create_atomic<Vector_packetqueue_simple>)
+        .def("create_vector_packetqueue", &Py2PDEVSModel::create_atomic<Vector_packetqueue>); // Atomic model code follows
+}

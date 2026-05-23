@@ -1,0 +1,34 @@
+{
+    "configurations": [
+        {
+            "name": "(gdb) Launch Python",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/usr/bin/python", // This should point to your python executable
+            "args": [
+                "${workspaceFolder}/examples/tdaq_phase2/tdaq_phase2.py",
+                "-c", "${workspaceFolder}/examples/tdaq_phase2/tdaq_phase2_tbed.params", 
+                "-tf", "0.05", 
+                "-d", "9999999",
+                "-variable_logging_backend", "hdf5"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set python interpreter for gdb",
+                    "text": "set python interpreter /usr/bin/python", // Path to Python interpreter
+                    "ignoreFailures": true
+                }
+            ],
+        }
+    ]
+}

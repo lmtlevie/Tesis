@@ -1,0 +1,36 @@
+version: "2.6"
+
+services:
+  
+  influxdb:
+    container_name: influxdb
+    image: influxdb:2.4.0-alpine
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=password
+      - DOCKER_INFLUXDB_INIT_ORG=cern
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=admintoken
+      - DOCKER_INFLUXDB_INIT_BUCKET=initbucket
+    ports:
+      - 8086:8086
+    volumes:
+      - influxdb_storage:/var/lib/influxdb2
+    
+  grafana:
+    container_name: grafana
+    image: grafana/grafana-enterprise:8.4.3
+    ports:
+      - 3000:3000
+    environment:
+      - GF_DEFAULT_INSTANCE_NAME=setup
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=password
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - grafana_storage:/var/lib/grafana grafana/grafana-enterprise
+
+volumes:
+  influxdb_storage: {}
+  grafana_storage: {}

@@ -1,0 +1,32 @@
+SimulationName = "testComparator";
+exec('../examples/common/Scilab/model.scilabParams', 0)
+exec('../examples/common/Scilab/functions.sce', 0)
+
+if ~exists('ExperimentNumber') then
+ ExperimentNumber=0;
+end 
+if exists('ParameterValues') & ExperimentNumber >= length(ParameterValues)  then
+	ExperimentNumber=0;
+end
+printf('Starting Experiment %i ... \n', ExperimentNumber);
+
+// General
+StochasticSimu = 1;     // 1=YES (use STDEVS), 0=NO (use means as constant values).
+ReproducibleSimu = REPRODUCIBLE_SEED;   // When using STDEVS, 1="Uses always the same random numbers (Reproducible) 0="Uses unique random numbers (generates a new seed). Any other value will be used as seed"
+ParameterValues = [1]; // needs to be defined to execute
+
+// test bug that makes illegitimate model (must use 3rd derivative)
+load("../library/hybrid/tests/Scilab/testBoundedInt_Illegitimate.sod", "tauDer"); // load input
+stepTimeChanges = tauDer.value.value.t;
+stepValueChanges = tauDer.value.value.value;
+stepValueChanges1 = tauDer.value.der1.value;
+stepValueChanges2 = tauDer.value.der2.value;
+stepValueChanges3  = tauDer.value.der3.value;
+
+samplingPeriodForPlots = 0.01;
+
+
+
+
+
+                                

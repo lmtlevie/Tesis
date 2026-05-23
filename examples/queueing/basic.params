@@ -1,0 +1,39 @@
+## General
+ReproducibleSimu = 0 # When using STDEVS, REPRODUCIBLE_SEED = 0 (Uses always the same random numbers) UNIQUE_SEED = -1(Uses unique random numbers (generates a new seed))
+SimulationName = queueing_basic
+
+# Parameter sweeping
+ParameterNames = { "XXX" } #
+ParameterValues = { 1 } #
+
+# Levels for logging of variables time-series, and for debug messages in the logfile 
+logLevel=9999999
+debugLevel=0
+
+# model parameters
+DataHandler.startTime = 0      #  when the DataHandler will start generating jobs
+DataHandler.stopThreshold = -1 # Stop when specified jobs where generated
+DataHandler.period = 1  # (distribution code) 1=DISTRIBUTION_EXPONENTIAL Time between consecutive generations (1/rate)
+DataHandler.period_mu = 0.01  #  mean for the exponential distribution
+DataHandler.jobSize = 0  # (distribution code) 0=DISTRIBUTION_CONSTANT  (distribution) size of generated jobs
+DataHandler.jobSize_value = 5   #  value for the constant distribution
+
+StorageHandler.maxCapacity = -1 # Max capacity of the StorageHandler
+
+EventFilter.servicePower = 400 # Processing Power
+EventFilter.maxJobs = 1 # Max amount of jobs
+
+# Use sampler for logging time series
+logLevel=0 # log only what is explicitly configured
+
+StorageHandler.qsize.logLevel=99999999
+StorageHandler.qsize.logger=2 # discrete sampler 
+StorageHandler.qsize.sample_period=0.1 # sampler period
+
+DataHandler.count.logLevel=99999999
+DataHandler.count.logger=2 # discrete sampler 
+DataHandler.count.sample_period=0.1 # sampler period
+
+EventFilter.finished.logLevel=99999999
+EventFilter.finished.logger=2 # discrete sampler 
+EventFilter.finished.sample_period=0.1 # sampler period

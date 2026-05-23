@@ -1,0 +1,43 @@
+UNAME = $(shell uname)
+
+
+ifeq ($(MODE), debug)
+	OPTFLAGS = -g -ggdb3 -Og
+endif
+ifeq ($(MODE), gprof)  # NOTE: better use valgrind: gprof is not able to profile shared objects (atomics.so, utils.so, engine.so)
+        OPTFLAGS = -pg -O3 -g  #http://www.math.utah.edu/docs/info/gprof_3.html#SEC3
+endif
+ifeq ($(MODE), valgrind)  # NOTE: same compilation as release
+        OPTFLAGS = -g -O3 # usage: http://valgrind.org/docs/manual/cl-manual.html#cl-manual.use
+                                          # usage2: https://baptiste-wicht.com/posts/2011/09/profile-c-application-with-callgrind-kcachegrind.html
+endif
+ifeq ($(MODE), memcheck)  
+        OPTFLAGS = -g -Og # usage: http://valgrind.org/docs/manual/quick-start.html#quick-start.intro 
+endif
+ifeq ($(MODE), performance)
+        OPTFLAGS = -Ofast
+endif        
+ifeq ($(MODE), release)
+        OPTFLAGS = -g -O3
+endif
+
+# lsb_release is not available in all linux distros, instead use os-release
+# ifeq ($(shell lsb_release -si),Ubuntu)
+ifeq ($(shell grep -oP '^ID=\K.+' /etc/os-release),ubuntu)
+    CXXFLAGS = -Wall $(OPTFLAGS) -DO_BINARY=0  -std=c++11 -fPIC -I /usr/include/hdf5/serial/
+else ifeq ($(shell grep -oP '^ID=\K.+' /etc/os-release),debian)
+    CXXFLAGS = -Wall $(OPTFLAGS) -DO_BINARY=0  -std=c++11 -fPIC -I /usr/include/hdf5/serial/
+else
+    CXXFLAGS = -Wall $(OPTFLAGS) -DO_BINARY=0  -std=c++11 -fPIC
+endif
+
+ifeq ($(MODE), debug)
+	CXXFLAGS += -DPOWERDEVS_DEBUG
+endif
+
+NODEPS = clean
+
+# avoid logging in pdevs.log
+# CXXFLAGS += -DNOPRINTPDEVSLOG
+
+

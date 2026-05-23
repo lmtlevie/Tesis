@@ -1,0 +1,20 @@
+OBJ_FILES  = $(SRC_FILES:.cpp=.o)
+DEP_FILES  = $(SRC_FILES:.cpp=.dep)
+OBJS_W_DIR = $(addprefix ${OBJ_DIR}/, $(OBJ_FILES))
+
+
+%.so: $(OBJS_W_DIR)
+	$(CXX) $(CXXFLAGS) -shared $(INCLUDES) $(LIBS) $(OBJS_W_DIR) -o $@
+
+${OBJ_DIR}/%.o : %.cpp 
+	@mkdir -p $(dir $@)
+	${CXX} -c ${CXXFLAGS} ${INCLUDES} $< -o $@
+	
+%.dep : %.cpp
+	@set -e; rm -f $@; \
+	$(CXX) -MM ${INCLUDES} -MT '$${OBJ_DIR}/$(basename $@).o' ${CXXFLAGS} $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+
+
+.SECONDARY: $(OBJS_W_DIR)

@@ -1,0 +1,29 @@
+if ~exists('ExperimentNumber') then
+ ExperimentNumber=0;
+end 
+if exists('ParameterValues') & ExperimentNumber >= length(ParameterValues)  then
+	ExperimentNumber=0;
+end
+printf('Starting Experiment %i ... \n', ExperimentNumber);
+
+// General
+//StochasticSimu = 1;     // 1=YES (use STDEVS), 0=NO (use means as constant values).
+//ReproducibleSimu = REPRODUCIBLE_SEED;   // When using STDEVS, 1="Uses always the same random numbers (Reproducible) 0="Uses unique random numbers (generates a new seed). Any other value will be used as seed" 
+
+max=100;
+
+// needs to be defined to execute
+SimulationName = "testLogicalOperators";
+ParameterValues = [1]; 
+
+
+stepValueChanges = [-100, 100, 0, 50, 0, -50, 300, 100.001, 99.9999, 20, -1, 1, 0];
+stepTimeChanges =  [0   , 1  , 2, 3 , 4, 5  , 6  , 7      , 8      , 9 , 10, 11, 12];
+
+
+
+
+
+
+
+                                

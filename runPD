@@ -1,0 +1,2 @@
+#!/bin/bash
+bin/pdme > /dev/null 2>&1  &

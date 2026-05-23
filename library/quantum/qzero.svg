@@ -1,0 +1,31 @@
+<svg width="256" height="256" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <path d="m139,-250c13,0 20,8 20,24l0,952c0,16 -7,24 -20,24c-13,0 -20,-8 -20,-24l0,-952c0,-16 7,-24 20,-24z" id="MJX-12-NCM-N-7C"/>
+  <path d="m249,-22c141,0 211,114 211,342c0,153 -32,255 -95,305c-35,27 -74,41 -115,41c-141,0 -211,-115 -211,-346c0,-184 49,-342 210,-342m112,546c7,-35 10,-99 10,-192c0,-92 -4,-160 -11,-204c-13,-80 -50,-120 -111,-120c-23,0 -46,9 -67,26c-27,23 -43,70 -50,142c-3,25 -4,77 -4,156c0,87 3,148 8,181c9,55 27,90 55,105c22,12 41,18 58,18c65,0 101,-53 112,-112z" id="MJX-12-NCM-N-30"/>
+  <path d="m278,242c1,2 1,5 1,8c0,3 0,6 -1,8l-180,477c-4,10 -11,15 -22,15c-15,0 -23,-8 -23,-24c0,-3 0,-6 1,-8l177,-468l-177,-467c-1,-2 -1,-5 -1,-9c0,-16 8,-24 23,-24c11,0 18,5 22,15l180,477z" id="MJX-12-NCM-N-27E9"/>
+ </defs>
+ <g>
+  <title>Layer 1</title>
+  <g transform="translate(0) scale(1, -1)" id="svg_1" stroke-width="0" fill="#000000" stroke="#000000">
+   <g id="svg_2" data-semantic-structure="(6 (5 (3 0 1 2)))" data-latex="\begin{array}{c} |0\rangle \end{array}" data-mml-node="math">
+    <g id="svg_3" data-speech-node="true" aria-level="0" data-semantic-owns="5" data-semantic-attributes="latex:\begin{array}{c} |0\rangle \end{array}" data-semantic-children="5" data-semantic-id="6" data-semantic-annotation="depth:1" data-semantic-role="unknown" data-semantic-type="multiline" data-latex="\begin{array}{c} |0\rangle \end{array}" data-latex-item="{array}" data-mml-node="mtable">
+     <g id="svg_4" data-speech-node="true" aria-level="1" data-semantic-owns="3" data-semantic-attributes="latex:{c}" data-semantic-parent="6" data-semantic-children="3" data-semantic-id="5" data-semantic-annotation="depth:2" data-semantic-role="multiline" data-semantic-type="line" data-latex="{c}" data-latex-item="{c}" data-mml-node="mtr">
+      <g id="svg_5" data-mml-node="mtd">
+       <g id="svg_6" data-speech-node="true" aria-level="2" data-semantic-owns="0 1 2" data-semantic-parent="5" data-semantic-content="0,2" data-semantic-children="0,1,2" data-semantic-id="3" data-semantic-annotation="depth:3" data-semantic-role="sequence" data-semantic-type="punctuated" data-semantic-added="true" data-mml-node="mrow">
+        <g id="svg_7" data-speech-node="true" aria-level="3" data-semantic-operator="punctuated" data-semantic-attributes="latex:|;texclass:ORD" data-semantic-parent="3" data-semantic-id="0" data-semantic-annotation="nemeth:number;depth:4" data-semantic-role="vbar" data-semantic-type="punctuation" data-latex="|" data-mjx-texclass="ORD" data-mml-node="mo">
+         <use transform="matrix(0.15079, 0, 0, 0.123214, 1.26571, -46.4696)" id="svg_8" x="290.40513" y="-898.65041" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#MJX-12-NCM-N-7C" data-c="7C"/>
+        </g>
+        <g id="svg_9" data-speech-node="true" aria-level="3" data-semantic-attributes="latex:0" data-semantic-parent="3" data-semantic-id="1" data-semantic-annotation="clearspeak:simple;nemeth:number;depth:4" data-semantic-font="normal" data-semantic-role="integer" data-semantic-type="number" data-latex="0" data-mml-node="mn">
+         <use transform="matrix(0.15079, 0, 0, 0.123214, 1.26571, -46.4696)" id="svg_10" x="568.40513" y="-898.65041" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#MJX-12-NCM-N-30" data-c="30"/>
+        </g>
+        <g id="svg_11" data-speech-node="true" aria-level="3" data-semantic-operator="punctuated" data-semantic-attributes="latex:\rangle" data-semantic-parent="3" data-semantic-id="2" data-semantic-annotation="nemeth:number;depth:4" data-semantic-role="closefence" data-semantic-type="punctuation" data-latex="\rangle" data-mml-node="mo">
+         <use transform="matrix(0.15079, 0, 0, 0.123214, 1.26571, -46.4696)" id="svg_12" x="1068.40513" y="-898.65041" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#MJX-12-NCM-N-27E9" data-c="27000000000"/>
+        </g>
+       </g>
+      </g>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+</svg>

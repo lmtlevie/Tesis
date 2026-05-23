@@ -1,0 +1,66 @@
+
+BW=5e6; //BW=0.4e6 (to use with linkCapacity=100); //original: BW=5e6 (to use with linkCapacity=1250);
+
+//original: tmin=50;
+//original: tmax=100;
+tmin=50;
+tmax=100;
+
+// original:
+pmax=0.1;
+// prueba:
+//pmax=1;
+
+// original: 
+//linkdelay=0.001;
+// prueba
+// a=0.02;
+linkdelay=0.005;
+
+RTT=linkdelay*4;
+
+psize=500*8;
+C=BW/psize;
+delta=1/C;
+
+BWDP=BW*RTT/psize;
+
+// original:
+// alpha=1e-4; 
+// prueba:
+alpha=1e-3;
+
+// original:
+// N=120;
+// prueba:
+//N=100;
+N=1;
+
+// This is to test using a constant tau (instead of RTT(t))
+// originally the delay atomic model should receive input from the dynamically calculated RTT
+//tau = RTT;
+tau = 0.8;
+
+//Nchange=-40;
+
+//original: init=(C+1)*RTT/N;
+init=0;
+
+inf=1e10;
+
+T=0.001;
+
+// QSS3
+
+// Funciona:
+dqmin=1e-9;
+dqrel=1e-6;
+
+// No Funciona:
+// dqmin=1e-6;
+// dqrel=1e-3;
+
+
+
+
+                                

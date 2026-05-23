@@ -1,0 +1,65 @@
+exec('../examples/Matias/hybridTCP_AQM/Scilab/functions.sce', 0)
+exec('../examples/Matias/hybridTCP_AQM/Scilab/constants.sce', 0)
+exec('../examples/Matias/hybridTCP_AQM/Scilab/metrics.sce', 0)
+
+if ~exists('ExperimentNumber') then
+ ExperimentNumber=0;
+end 
+if exists('ParameterValues') & ExperimentNumber >= length(ParameterValues)  then
+	ExperimentNumber=0;
+end
+printf('Starting Experiment %i ... \n', ExperimentNumber);
+
+// General
+StochasticSimu = 1;     // 1=YES (use STDEVS), 0=NO (use means as constant values).
+ReproducibleSimu = REPRODUCIBLE_SEED;   // When using STDEVS, 1="Uses always the same random numbers (Reproducible) 0="Uses unique random numbers (generates a new seed). Any other value will be used as seed" 
+SimulationName = "continousQueueOnly";
+ParameterValues = [1]; // needs to be defined to execute
+
+// Queue parameters
+linkCapacity = 1250 ; // (bits/s)
+queueMaxSize = 100 ; // (in bits)
+queueMinSize = 0; // (in bits) why should it be different? 
+
+
+// Generators
+ConstantGenRate = linkCapacity * 2;
+StepGenRate = linkCapacity * 3;
+StepGenFrec = 1/2;
+stepTimeChanges = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+stepValueChanges = [0, linkCapacity*2, linkCapacity*4, 0, linkCapacity, linkCapacity/2, ..
+                     linkCapacity*1.5, linkCapacity, linkCapacity/2, linkCapacity*2,  linkCapacity, ..
+                      linkCapacity/3, linkCapacity, linkCapacity*1.5];
+
+// Reproduce maxQueue>100 (test reset-MAX)
+//stepTimeChanges = [0, 2];
+//stepValueChanges = [linkCapacity*3, 0];
+
+// Reproduce maxQueue<0 (test reset-MIN)
+//stepTimeChanges = [0, 3];
+//stepValueChanges = [linkCapacity*1.58, linkCapacity/3.4];
+
+// reproduce both error limits (queueSize>100 and queueSize<0)
+//stepTimeChanges = [0, 3, 6];
+//stepValueChanges = [linkCapacity*1.58, linkCapacity/3.4, linkCapacity*3.66];
+
+// load TCP_AQM parameters
+exec('../examples/Matias/continousQueueOnly/Scilab/fluidTCP_AQM.scilabParams', 0)
+
+// plots
+samplingPeriodForPlots = 0.01;
+
+
+// Continuous flow
+
+
+
+
+// For sweeping parameters: ./RunNSimulations.sh -n <sizeParameterValues> -f <finalTime>
+ParameterNames = ["tau"] ; // this must be changed in ScilabParameterSweeper::UpdateParameters
+//ParameterValues = [0, 0.05, 0.1, 0.15, 0.2];
+ParameterValues = [0.2];
+
+
+
+                                

@@ -1,0 +1,84 @@
+# Version: 0.1
+# Date modified: 04/09/23
+
+# FROM gitlab-registry.cern.ch/linuxsupport/cc7-base
+FROM centos:7
+MAINTAINER James Maple <james.m@cern.ch>
+
+# Environment setup
+ARG USERNAME
+ENV SCILAB_VERSION=5.5.2
+
+# Update base image
+RUN yum update -y && yum upgrade -y
+
+# Repo setup / updates
+RUN yum install -y centos-release-scl epel-release && \
+    yum-config-manager --enable epel && \
+    yum update -y && \
+    yum upgrade -y
+
+# Install Required
+RUN yum install -y \
+    make \
+    git \
+    boost-devel \
+    devtoolset-7 \
+    valgrind \
+    kcachegrind \
+    graphviz \
+    wget \
+    java-openjdk \
+    mesa-dri-drivers \
+    python-matplotlib \
+    python-devel \
+    h5py \
+    psmisc \
+    qt-devel \
+    gsl-devel \
+    gnuplot \
+    hdf5-devel \
+    python-future \
+    python-configparser \
+    python-six \
+    time-1.7 \
+    python3  \
+    python3-pillow \    
+    matplotlib \    
+    python3-tkinter \
+    h5py \
+    pandas
+RUN pip3 install --upgrade pip; pip3 install matplotlib h5py pandas
+
+
+# Install scilab
+WORKDIR /opt/rh
+RUN wget http://www.scilab.org/download/$SCILAB_VERSION/scilab-$SCILAB_VERSION.bin.linux-x86_64.tar.gz -nv && \
+    tar xzf scilab-$SCILAB_VERSION.bin.linux-x86_64.tar.gz && \
+    rm -f scilab*.tar.gz && \
+    ln -s /opt/rh/scilab-$SCILAB_VERSION/bin/scilab /usr/bin/scilab
+WORKDIR /
+
+# QT make
+RUN ln -s /usr/bin/qmake-qt4 /usr/bin/qmake
+
+# Add py2pdevs to the PythonPath    
+ENV PYTHONPATH "${PYTHONPATH}:/powerdevs/build/lib"
+ENV LD_LIBRARY_PATH "${LD_LIBRARY_PATH}:/powerdevs/build/lib"
+
+
+# X11 config
+RUN yum install -y xeyes
+RUN groupadd -g 1000 ${USERNAME} && useradd -s /bin/bash -m ${USERNAME} -u 1000 -g 1000
+USER ${USERNAME}
+
+
+# Start
+WORKDIR /powerdevs
+ENTRYPOINT ["scl", "enable", "devtoolset-7", "bash"]
+
+
+
+
+
+

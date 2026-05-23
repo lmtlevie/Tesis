@@ -1,0 +1,176 @@
+Coupled
+    {
+    Type = Root
+    Name = Quantum
+    Ports = 0; 0
+    Description = Quantum atomic models
+    Graphic
+        {
+        Position = 0; 0
+        Dimension = 555; 555
+        Direction = Right
+        Color = 15
+        Icon = %quantum%quantum.svg
+        Window = 5000; 5000; 5000; 5000
+        }
+    Parameters
+        {
+        }
+    System
+        {
+        Atomic
+            {
+            Name = Qubit zero
+            Ports = 0 ; 1
+            Path = quantum\qzero.h
+            Description = Emits |0> as two complex components
+            Graphic
+                {
+                Position = -3510 ; -330
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%qzero.svg
+                }
+            Parameters
+                {
+                }
+            }
+        Atomic
+            {
+            Name = ID
+            Ports = 1 ; 1
+            Path = quantum\id.h
+            Description = Identity gate
+            Graphic
+                {
+                Position = -2340 ; -330
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%id.svg
+                }
+            Parameters
+                {
+                Processing time = Str; 0 ;
+                }
+            }
+        Atomic
+            {
+            Name = X
+            Ports = 1 ; 1
+            Path = quantum\x.h
+            Description = Pauli-X gate
+            Graphic
+                {
+                Position = -1170 ; -330
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%x.svg
+                }
+            Parameters
+                {
+                Processing time = Str; 0 ;
+                }
+            }
+        Atomic
+            {
+            Name = SX
+            Ports = 1 ; 1
+            Path = quantum\sx.h
+            Description = Square root of X gate
+            Graphic
+                {
+                Position = 0 ; -330
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%sx.svg
+                }
+            Parameters
+                {
+                Processing time = Str; 0 ;
+                }
+            }
+        Atomic
+            {
+            Name = RX
+            Ports = 1 ; 1
+            Path = quantum\rx.h
+            Description = Rotation around X axis
+            Graphic
+                {
+                Position = 1170 ; -330
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%rx.svg
+                }
+            Parameters
+                {
+                Processing time = Str; 0 ;
+                theta = Str; 0 ;
+                }
+            }
+        Atomic
+            {
+            Name = RZ
+            Ports = 1 ; 1
+            Path = quantum\rz.h
+            Description = Rotation around Z axis
+            Graphic
+                {
+                Position = 2340 ; -330
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%rz.svg
+                }
+            Parameters
+                {
+                Processing time = Str; 0 ;
+                theta = Str; 0 ;
+                }
+            }
+        Atomic
+            {
+            Name = CZ
+            Ports = 2 ; 2
+            Path = quantum\cz.h
+            Description = Controlled-Z gate (port 0 control, port 1 target)
+            Graphic
+                {
+                Position = -585 ; 990
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%cz.svg
+                }
+            Parameters
+                {
+                Processing time = Str; 0 ;
+                }
+            }
+        Atomic
+            {
+            Name = RZZ
+            Ports = 2 ; 2
+            Path = quantum\rzz.h
+            Description = Two-qubit ZZ rotation (port 0 qubit 0, port 1 qubit 1)
+            Graphic
+                {
+                Position = 585 ; 990
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%rzz.svg
+                }
+            Parameters
+                {
+                Processing time = Str; 0 ;
+                theta = Str; 0 ;
+                }
+            }
+        }
+    }

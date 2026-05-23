@@ -1,0 +1,824 @@
+Coupled
+    {
+    Type = Root
+    Name = logicalOperators
+    Ports = 0; 0
+    Description = 
+    Graphic
+        {
+        Position = 0; 0
+        Dimension = 600; 600
+        Direction = Right
+        Color = 15
+        Icon = 
+        Window = 5000; 5000; 5000; 5000
+        }
+    Parameters
+        {
+        }
+    System
+        {
+        Coupled
+            {
+            Type = Coordinator
+            Name = NOT
+            Ports = 1; 1
+            Description = Coupled DEVS model
+            Graphic
+                {
+                Position = -2355; -3135
+                Dimension = 675; 720
+                Direction = Right
+                Color = 15
+                Icon = %basicelements%coupled.svg
+                Window = 5000; 5000; 5000; 5000
+                }
+            Parameters
+                {
+                }
+            System
+                {
+                Inport
+                    {
+                    Name = A
+                    CoupledPort = 1
+                    Description = 
+                    Graphic
+                        {
+                        Position = -13965 ; -2850
+                        Dimension = 480
+                        Direction = Right
+                        }
+                    }
+                Outport
+                    {
+                    Name = !A
+                    CoupledPort = 1
+                    Description = 
+                    Graphic
+                        {
+                        Position = -9690 ; -2400
+                        Dimension = 480
+                        Direction = Right
+                        }
+                    }
+                Atomic
+                    {
+                    Name = -A + 1
+                    Ports = 2 ; 1
+                    Path = qss/qss_wsum.h
+                    Description = y = K[0] * u0 + K[1] * u1 + ... + K[7] * u7 (QSS1 to 4)
+                    Graphic
+                        {
+                        Position = -12105 ; -2760
+                        Dimension = 675 ; 720
+                        Direction = Right
+                        Color = 15
+                        Icon = %continuous%sum.svg
+                        }
+                    Parameters
+                        {
+                        K[0] = Str; -1 ; 
+                        K[1] = Str; 1 ; 
+                        K[2] = Str; 0 ; 
+                        K[3] = Str; 0 ; 
+                        K[4] = Str; 0 ; 
+                        K[5] = Str; 0 ; 
+                        K[6] = Str; 0 ; 
+                        K[7] = Str; 0 ; 
+                        Inputs = Str; %Inputs ; 
+                        }
+                    }
+                Atomic
+                    {
+                    Name = 1
+                    Ports = 0 ; 1
+                    Path = sources\constant_sci.h
+                    Description = Constant
+                    Graphic
+                        {
+                        Position = -13905 ; -1755
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %sources%constant.svg
+                        }
+                    Parameters
+                        {
+                        K = Str; 1 ; Constant output value (Scilab expression)
+                        }
+                    }
+                Line
+                    {
+                    Source = Cmp ;  1 ;  2 ; -1
+                    Sink = Cmp ;  2 ;  1 ; 0
+                    PointX = -12240 ; -12375 ; -12375 ; -13125
+                    PointY = -2250 ; -2250 ; -1425 ; -1425
+                    }
+                Line
+                    {
+                    Source = Prt ;  1 ;  1 ; 0
+                    Sink = Cmp ;  1 ;  1 ; -1
+                    PointX = -13350 ; -12450 ; -12450 ; -12240
+                    PointY = -2850 ; -2850 ; -2550 ; -2550
+                    }
+                Line
+                    {
+                    Source = Prt ;  2 ; 0 ; -1
+                    Sink = Cmp ;  1 ;  1 ; 0
+                    PointX = -9840 ; -9840 ; -11325
+                    PointY = -2400 ; -2400 ; -2400
+                    }
+                }
+            }
+                Coupled
+                    {
+                    Type = Coordinator
+                    Name = AND
+                    Ports = 2; 1
+                    Description = Coupled DEVS model
+                    Graphic
+                        {
+                        Position = -2355; -6135
+                        Dimension = 675; 720
+                        Direction = Right
+                        Color = 15
+                        Icon = %basicelements%coupled.svg
+                        Window = 5000; 5000; 5000; 5000
+                        }
+                    Parameters
+                        {
+                        }
+                    System
+                        {
+                        Inport
+                            {
+                            Name = A
+                            CoupledPort = 1
+                            Description = 
+                            Graphic
+                                {
+                                Position = -13965 ; -2850
+                                Dimension = 480
+                                Direction = Right
+                                }
+                            }
+                        Outport
+                            {
+                            Name = A and B
+                            CoupledPort = 1
+                            Description = 
+                            Graphic
+                                {
+                                Position = -9690 ; -2400
+                                Dimension = 480
+                                Direction = Right
+                                }
+                            }
+                        Inport
+                            {
+                            Name = B
+                            CoupledPort = 2
+                            Description = 
+                            Graphic
+                                {
+                                Position = -14040 ; -1500
+                                Dimension = 480
+                                Direction = Right
+                                }
+                            }
+                        Atomic
+                            {
+                            Name = AND
+                            Ports = 2 ; 1
+                            Path = qss/qss_multiplier.h
+                            Description = Multiplier. (QSS1 to 4)
+                            Graphic
+                                {
+                                Position = -12180 ; -2730
+                                Dimension = 675 ; 675
+                                Direction = Right
+                                Color = 15
+                                Icon = %continuous%multiplier.svg
+                                }
+                            Parameters
+                                {
+                                Advance method = Lst; 1%Purely static%Estimate step% ; 
+                                dQmin = Str; 1e-6 ; 
+                                dQrel = Str; 1e-3 ; 
+                                }
+                            }
+                        Line
+                            {
+                            Source = Prt ;  1 ;  1 ; 0
+                            Sink = Cmp ;  1 ;  1 ; -1
+                            PointX = -13350 ; -12600 ; -12600 ; -12315
+                            PointY = -2850 ; -2850 ; -2550 ; -2550
+                            }
+                        Line
+                            {
+                            Source = Prt ;  3 ;  1 ; 0
+                            Sink = Cmp ;  1 ;  2 ; -1
+                            PointX = -13425 ; -12675 ; -12675 ; -12315
+                            PointY = -1500 ; -1500 ; -2250 ; -2250
+                            }
+                        Line
+                            {
+                            Source = Cmp ;  1 ;  1 ; 0
+                            Sink = Prt ;  2 ;  1 ; -1
+                            PointX = -11400 ; -9840 ; -9840
+                            PointY = -2400 ; -2400 ; -2400
+                            }
+                        }
+                    }
+                        Coupled
+                            {
+                            Type = Coordinator
+                            Name = OR
+                            Ports = 2; 1
+                            Description = Coupled DEVS model
+                            Graphic
+                                {
+                                Position = -2325; -4500
+                                Dimension = 600; 600
+                                Direction = Right
+                                Color = 15
+                                Icon = %basicelements%coupled.svg
+                                Window = 5000; 5000; 5000; 5000
+                                }
+                            Parameters
+                                {
+                                }
+                            System
+                                {
+                                Inport
+                                    {
+                                    Name = A
+                                    CoupledPort = 1
+                                    Description = 
+                                    Graphic
+                                        {
+                                        Position = -15240 ; -2625
+                                        Dimension = 480
+                                        Direction = Right
+                                        }
+                                    }
+                                Outport
+                                    {
+                                    Name = A and B
+                                    CoupledPort = 1
+                                    Description = 
+                                    Graphic
+                                        {
+                                        Position = -9690 ; -2400
+                                        Dimension = 480
+                                        Direction = Right
+                                        }
+                                    }
+                                Inport
+                                    {
+                                    Name = B
+                                    CoupledPort = 2
+                                    Description = 
+                                    Graphic
+                                        {
+                                        Position = -15090 ; -1275
+                                        Dimension = 480
+                                        Direction = Right
+                                        }
+                                    }
+                                Atomic
+                                    {
+                                    Name = AND
+                                    Ports = 2 ; 1
+                                    Path = qss/qss_multiplier.h
+                                    Description = Multiplier. (QSS1 to 4)
+                                    Graphic
+                                        {
+                                        Position = -13305 ; -1005
+                                        Dimension = 675 ; 675
+                                        Direction = Right
+                                        Color = 15
+                                        Icon = %continuous%multiplier.svg
+                                        }
+                                    Parameters
+                                        {
+                                        Advance method = Lst; 1%Purely static%Estimate step% ; 
+                                        dQmin = Str; 1e-6 ; 
+                                        dQrel = Str; 1e-3 ; 
+                                        }
+                                    }
+                                Atomic
+                                    {
+                                    Name = A+B - (A*B)
+                                    Ports = 3 ; 1
+                                    Path = qss/qss_wsum.h
+                                    Description = y = K[0] * u0 + K[1] * u1 + ... + K[7] * u7 (QSS1 to 4)
+                                    Graphic
+                                        {
+                                        Position = -12180 ; -2775
+                                        Dimension = 1575 ; 915
+                                        Direction = Right
+                                        Color = 15
+                                        Icon = %continuous%sum.svg
+                                        }
+                                    Parameters
+                                        {
+                                        K[0] = Str; 1 ; 
+                                        K[1] = Str; 1 ; 
+                                        K[2] = Str; -1 ; 
+                                        K[3] = Str; 0 ; 
+                                        K[4] = Str; 0 ; 
+                                        K[5] = Str; 0 ; 
+                                        K[6] = Str; 0 ; 
+                                        K[7] = Str; 0 ; 
+                                        Inputs = Str; %Inputs ; 
+                                        }
+                                    }
+                                Point
+                                    {
+                                    ConectedLines = 1 ; 5 ; 6
+                                    ConectedExtrems = Org ; Org ; Org
+                                    Position = -13575 ; -2625
+                                    }
+                                Point
+                                    {
+                                    ConectedLines = 2 ; 7 ; 8
+                                    ConectedExtrems = Org ; Org ; Org
+                                    Position = -14175 ; -1275
+                                    }
+                                Line
+                                    {
+                                    Source = Prt ;  1 ;  1 ; 0
+                                    Sink = Pnt ;  1 ; -1 ; 0
+                                    PointX = -14625 ; -14625 ; -13575
+                                    PointY = -2625 ; -2625 ; -2625
+                                    }
+                                Line
+                                    {
+                                    Source = Prt ;  3 ;  1 ; 0
+                                    Sink = Pnt ;  2 ; -1 ; 0
+                                    PointX = -14475 ; -14475 ; -14175
+                                    PointY = -1275 ; -1275 ; -1275
+                                    }
+                                Line
+                                    {
+                                    Source = Cmp ;  2 ;  1 ; 0
+                                    Sink = Prt ;  2 ;  1 ; -1
+                                    PointX = -10500 ; -9840 ; -9840
+                                    PointY = -2325 ; -2325 ; -2400
+                                    }
+                                Line
+                                    {
+                                    Source = Cmp ;  1 ;  1 ; 0
+                                    Sink = Cmp ;  2 ;  3 ; -1
+                                    PointX = -12525 ; -12450 ; -12450 ; -12315
+                                    PointY = -675 ; -675 ; -2025 ; -2025
+                                    }
+                                Line
+                                    {
+                                    Source = Cmp ;  1 ;  1 ; -1
+                                    Sink = Pnt ;  1 ; -1 ; 0
+                                    PointX = -13440 ; -13575 ; -13575
+                                    PointY = -825 ; -825 ; -2625
+                                    }
+                                Line
+                                    {
+                                    Source = Pnt ;  1 ; -1 ; 0
+                                    Sink = Cmp ;  2 ;  1 ; -1
+                                    PointX = -13575 ; -12315 ; -12315
+                                    PointY = -2625 ; -2625 ; -2625
+                                    }
+                                Line
+                                    {
+                                    Source = Cmp ;  1 ;  2 ; -1
+                                    Sink = Pnt ;  2 ; -1 ; 0
+                                    PointX = -13440 ; -14175 ; -14175
+                                    PointY = -525 ; -525 ; -1275
+                                    }
+                                Line
+                                    {
+                                    Source = Pnt ;  2 ; -1 ; 0
+                                    Sink = Cmp ;  2 ;  2 ; -1
+                                    PointX = -14175 ; -14025 ; -14025 ; -12315
+                                    PointY = -1275 ; -1275 ; -2325 ; -2325
+                                    }
+                                }
+                            }
+                                Coupled
+                                    {
+                                    Type = Coordinator
+                                    Name = greater
+                                    Ports = 2; 1
+                                    Description = Coupled DEVS model
+                                    Graphic
+                                        {
+                                        Position = -5580; -5910
+                                        Dimension = 675; 720
+                                        Direction = Right
+                                        Color = 15
+                                        Icon = %basicelements%coupled.svg
+                                        Window = 5000; 5000; 5000; 5000
+                                        }
+                                    Parameters
+                                        {
+                                        }
+                                    System
+                                        {
+                                        Inport
+                                            {
+                                            Name = A
+                                            CoupledPort = 1
+                                            Description = 
+                                            Graphic
+                                                {
+                                                Position = -5790 ; -975
+                                                Dimension = 480
+                                                Direction = Right
+                                                }
+                                            }
+                                        Outport
+                                            {
+                                            Name = A>B
+                                            CoupledPort = 1
+                                            Description = 
+                                            Graphic
+                                                {
+                                                Position = -825 ; -225
+                                                Dimension = 600
+                                                Direction = Right
+                                                }
+                                            }
+                                        Inport
+                                            {
+                                            Name = B
+                                            CoupledPort = 2
+                                            Description = 
+                                            Graphic
+                                                {
+                                                Position = -5745 ; 300
+                                                Dimension = 405
+                                                Direction = Right
+                                                }
+                                            }
+                                        Atomic
+                                            {
+                                            Name = greater
+                                            Ports = 2 ; 1
+                                            Path = qss/compare.h
+                                            Description = The output is yu when u0>u1. Otherwise, the output is yl.
+                                            Graphic
+                                                {
+                                                Position = -3630 ; -555
+                                                Dimension = 675 ; 675
+                                                Direction = Right
+                                                Color = 15
+                                                Icon = %hybrid%comparator.svg
+                                                }
+                                            Parameters
+                                                {
+                                                yl = Str; 0 ; Low level (Scilab expression)
+                                                yu = Str; 1 ; Upper level (Scilab expression)
+                                                }
+                                            }
+                                        Line
+                                            {
+                                            Source = Prt ;  1 ;  1 ; 0
+                                            Sink = Cmp ;  1 ;  1 ; -1
+                                            PointX = -5175 ; -4050 ; -4050 ; -3765
+                                            PointY = -975 ; -975 ; -375 ; -375
+                                            }
+                                        Line
+                                            {
+                                            Source = Cmp ;  1 ;  1 ; 0
+                                            Sink = Prt ;  2 ;  1 ; -1
+                                            PointX = -2850 ; -990 ; -990
+                                            PointY = -225 ; -225 ; -225
+                                            }
+                                        Line
+                                            {
+                                            Source = Prt ;  3 ;  1 ; 0
+                                            Sink = Cmp ;  1 ;  2 ; -1
+                                            PointX = -5250 ; -4125 ; -4125 ; -3765
+                                            PointY = 300 ; 300 ; -75 ; -75
+                                            }
+                                        }
+                                    }
+                                        Coupled
+                                            {
+                                            Type = Coordinator
+                                            Name = less
+                                            Ports = 2; 1
+                                            Description = Coupled DEVS model
+                                            Graphic
+                                                {
+                                                Position = -5655; -3135
+                                                Dimension = 675; 720
+                                                Direction = Right
+                                                Color = 15
+                                                Icon = %basicelements%coupled.svg
+                                                Window = 5000; 5000; 5000; 5000
+                                                }
+                                            Parameters
+                                                {
+                                                }
+                                            System
+                                                {
+                                                Inport
+                                                    {
+                                                    Name = A
+                                                    CoupledPort = 1
+                                                    Description = 
+                                                    Graphic
+                                                        {
+                                                        Position = -5640 ; 75
+                                                        Dimension = 480
+                                                        Direction = Right
+                                                        }
+                                                    }
+                                                Outport
+                                                    {
+                                                    Name = A<B
+                                                    CoupledPort = 1
+                                                    Description = 
+                                                    Graphic
+                                                        {
+                                                        Position = -825 ; -225
+                                                        Dimension = 600
+                                                        Direction = Right
+                                                        }
+                                                    }
+                                                Inport
+                                                    {
+                                                    Name = B
+                                                    CoupledPort = 2
+                                                    Description = 
+                                                    Graphic
+                                                        {
+                                                        Position = -5670 ; -1050
+                                                        Dimension = 540
+                                                        Direction = Right
+                                                        }
+                                                    }
+                                                Atomic
+                                                    {
+                                                    Name = less
+                                                    Ports = 2 ; 1
+                                                    Path = qss/compare.h
+                                                    Description = The output is yu when u0>u1. Otherwise, the output is yl.
+                                                    Graphic
+                                                        {
+                                                        Position = -3630 ; -555
+                                                        Dimension = 675 ; 675
+                                                        Direction = Right
+                                                        Color = 15
+                                                        Icon = %hybrid%comparator.svg
+                                                        }
+                                                    Parameters
+                                                        {
+                                                        yl = Str; 0 ; Low level (Scilab expression)
+                                                        yu = Str; 1 ; Upper level (Scilab expression)
+                                                        }
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Cmp ;  1 ;  1 ; 0
+                                                    Sink = Prt ;  2 ;  1 ; -1
+                                                    PointX = -2850 ; -990 ; -990
+                                                    PointY = -225 ; -225 ; -225
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Prt ;  3 ;  1 ; 0
+                                                    Sink = Cmp ;  1 ;  1 ; -1
+                                                    PointX = -5025 ; -4050 ; -4050 ; -3765
+                                                    PointY = -1050 ; -1050 ; -375 ; -375
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Prt ;  1 ;  1 ; 0
+                                                    Sink = Cmp ;  1 ;  2 ; -1
+                                                    PointX = -5025 ; -4050 ; -4050 ; -3765
+                                                    PointY = 75 ; 75 ; -75 ; -75
+                                                    }
+                                                }
+                                            }
+                                                Coupled
+                                                    {
+                                                    Type = Coordinator
+                                                    Name = less_equal
+                                                    Ports = 2; 1
+                                                    Description = Coupled DEVS model
+                                                    Graphic
+                                                        {
+                                                        Position = -5580; -1710
+                                                        Dimension = 675; 720
+                                                        Direction = Right
+                                                        Color = 15
+                                                        Icon = %basicelements%coupled.svg
+                                                        Window = 5000; 5000; 5000; 5000
+                                                        }
+                                                    Parameters
+                                                        {
+                                                        }
+                                                    System
+                                                        {
+                                                        Inport
+                                                            {
+                                                            Name = A
+                                                            CoupledPort = 1
+                                                            Description = 
+                                                            Graphic
+                                                                {
+                                                                Position = -5640 ; -675
+                                                                Dimension = 480
+                                                                Direction = Right
+                                                                }
+                                                            }
+                                                        Outport
+                                                            {
+                                                            Name = A<=B
+                                                            CoupledPort = 1
+                                                            Description = 
+                                                            Graphic
+                                                                {
+                                                                Position = -825 ; -225
+                                                                Dimension = 600
+                                                                Direction = Right
+                                                                }
+                                                            }
+                                                        Inport
+                                                            {
+                                                            Name = B
+                                                            CoupledPort = 2
+                                                            Description = 
+                                                            Graphic
+                                                                {
+                                                                Position = -5670 ; 825
+                                                                Dimension = 540
+                                                                Direction = Right
+                                                                }
+                                                            }
+                                                        Atomic
+                                                            {
+                                                            Name = less_equal
+                                                            Ports = 2 ; 1
+                                                            Path = qss/compare.h
+                                                            Description = The output is yu when u0>u1. Otherwise, the output is yl.
+                                                            Graphic
+                                                                {
+                                                                Position = -3255 ; -555
+                                                                Dimension = 675 ; 675
+                                                                Direction = Right
+                                                                Color = 15
+                                                                Icon = %hybrid%comparator.svg
+                                                                }
+                                                            Parameters
+                                                                {
+                                                                yl = Str; 1 ; Low level (Scilab expression)
+                                                                yu = Str; 0 ; Upper level (Scilab expression)
+                                                                }
+                                                            }
+                                                        Line
+                                                            {
+                                                            Source = Cmp ;  1 ;  1 ; 0
+                                                            Sink = Prt ;  2 ;  1 ; -1
+                                                            PointX = -2475 ; -2475 ; -990
+                                                            PointY = -225 ; -225 ; -225
+                                                            }
+                                                        Line
+                                                            {
+                                                            Source = Prt ;  1 ;  1 ; 0
+                                                            Sink = Cmp ;  1 ;  1 ; -1
+                                                            PointX = -5025 ; -3825 ; -3825 ; -3390
+                                                            PointY = -675 ; -675 ; -375 ; -375
+                                                            }
+                                                        Line
+                                                            {
+                                                            Source = Cmp ;  1 ;  2 ; -1
+                                                            Sink = Prt ;  3 ;  1 ; 0
+                                                            PointX = -3390 ; -5025 ; -5025
+                                                            PointY = -75 ; -75 ; 825
+                                                            }
+                                                        }
+                                                    }
+                                                        Coupled
+                                                            {
+                                                            Type = Coordinator
+                                                            Name = greater_equal
+                                                            Ports = 2; 1
+                                                            Description = Coupled DEVS model
+                                                            Graphic
+                                                                {
+                                                                Position = -5655; -4785
+                                                                Dimension = 675; 720
+                                                                Direction = Right
+                                                                Color = 15
+                                                                Icon = %basicelements%coupled.svg
+                                                                Window = 5000; 5000; 5000; 5000
+                                                                }
+                                                            Parameters
+                                                                {
+                                                                }
+                                                            System
+                                                                {
+                                                                Inport
+                                                                    {
+                                                                    Name = A
+                                                                    CoupledPort = 1
+                                                                    Description = 
+                                                                    Graphic
+                                                                        {
+                                                                        Position = -5595 ; -75
+                                                                        Dimension = 555
+                                                                        Direction = Right
+                                                                        }
+                                                                    }
+                                                                Outport
+                                                                    {
+                                                                    Name = A>=B
+                                                                    CoupledPort = 1
+                                                                    Description = 
+                                                                    Graphic
+                                                                        {
+                                                                        Position = -825 ; -225
+                                                                        Dimension = 600
+                                                                        Direction = Right
+                                                                        }
+                                                                    }
+                                                                Inport
+                                                                    {
+                                                                    Name = B
+                                                                    CoupledPort = 2
+                                                                    Description = 
+                                                                    Graphic
+                                                                        {
+                                                                        Position = -5595 ; -1725
+                                                                        Dimension = 540
+                                                                        Direction = Right
+                                                                        }
+                                                                    }
+                                                                Atomic
+                                                                    {
+                                                                    Name = greater_equal
+                                                                    Ports = 2 ; 1
+                                                                    Path = qss/compare.h
+                                                                    Description = The output is yu when u0>u1. Otherwise, the output is yl.
+                                                                    Graphic
+                                                                        {
+                                                                        Position = -3255 ; -555
+                                                                        Dimension = 675 ; 675
+                                                                        Direction = Right
+                                                                        Color = 15
+                                                                        Icon = %hybrid%comparator.svg
+                                                                        }
+                                                                    Parameters
+                                                                        {
+                                                                        yl = Str; 1 ; Low level (Scilab expression)
+                                                                        yu = Str; 0 ; Upper level (Scilab expression)
+                                                                        }
+                                                                    }
+                                                                Line
+                                                                    {
+                                                                    Source = Cmp ;  1 ;  1 ; 0
+                                                                    Sink = Prt ;  2 ;  1 ; -1
+                                                                    PointX = -2475 ; -2475 ; -990
+                                                                    PointY = -225 ; -225 ; -225
+                                                                    }
+                                                                Line
+                                                                    {
+                                                                    Source = Prt ;  3 ;  1 ; 0
+                                                                    Sink = Cmp ;  1 ;  1 ; -1
+                                                                    PointX = -4950 ; -3675 ; -3675 ; -3390
+                                                                    PointY = -1725 ; -1725 ; -375 ; -375
+                                                                    }
+                                                                Line
+                                                                    {
+                                                                    Source = Prt ;  1 ;  1 ; 0
+                                                                    Sink = Cmp ;  1 ;  2 ; -1
+                                                                    PointX = -4950 ; -4950 ; -3390
+                                                                    PointY = -75 ; -75 ; -75
+                                                                    }
+                                                                }
+                                                            }
+                                                                Atomic
+                                                                    {
+                                                                    Name = generateIfTRUE
+                                                                    Ports = 2 ; 1
+                                                                    Path = hybridQueue_mab/logicalGenerateEventIfTrue.h
+                                                                    Description = Similar  to cross-detect, but outputs only if u0>LEVEL (not every time it crosses) (QSS1 to 4)\nThe generated value is received in u1
+                                                                    Graphic
+                                                                        {
+                                                                        Position = -2565 ; -1680
+                                                                        Dimension = 630 ; 660
+                                                                        Direction = Right
+                                                                        Color = 15
+                                                                        Icon = %hybrid%crossdetector.svg
+                                                                        }
+                                                                    Parameters
+                                                                        {
+                                                                        level = Str; 0.5 ; Crossing level (Scilab expression)
+                                                                        }
+                                                                    }
+        }
+    }

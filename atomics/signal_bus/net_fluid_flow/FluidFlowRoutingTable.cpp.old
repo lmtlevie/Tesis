@@ -1,0 +1,63 @@
+#include "FluidFlowRoutingTable.h"
+
+std::map<std::string, map<std::string, int>> FluidFlowRoutingTable::RoutingTable;
+//std::map<std::string, int> FluidFlowRoutingTable::DemuxPorts;
+
+
+int FluidFlowRoutingTable::getOutgoingPort(const std::string& nodeName, const std::string& flowId /*, int inputPort*/){
+	if(RoutingTable.empty()) {// call just once (unless it does not define any flows...)
+		defineRoutes();
+	}
+
+	auto searchNode = RoutingTable.find(nodeName);
+	if ( searchNode == RoutingTable.end() ) { // not found
+		throw std::runtime_error("FluidFlowRoutingTable::getOutgoingPort - '" + nodeName + "' is not defined in the routing table. Check the CmdLine configuration (routes can not be defined in scilab)"); // Flow names must be defined in the CmdLine configuration (PD<->Scilab can not read strings)
+	}
+
+	auto searchFlow= searchNode->second.find(flowId);
+	if ( searchFlow == searchNode->second.end() ) { // not found
+		throw std::runtime_error("'" + flowId + "' flow is not defined in the routing table for node '"+ nodeName +"'. Check the CmdLine configuration (routes can not be defined in scilab)"); // Flow names must be defined in the CmdLine configuration (PD<->Scilab can not read strings)
+	}
+
+	return searchFlow->second;
+}
+
+//int FluidFlowRoutingTable::getDemultiplexingPort(const std::string& flowId){
+//	if(DemuxPorts.empty()) {// call just once (unless it does not define any flows...)
+//		defineRoutes();
+//	}
+//
+//	auto search = DemuxPorts.find({flowId});
+//	if ( search == DemuxPorts.end() ) { // not found
+//		throw std::runtime_error("'" + flowId + "' has no demux outPort defined. Check the CmdLine configuration (routes can not be defined in scilab)"); // Flow names must be defined in the CmdLine configuration (PD<->Scilab can not read strings)
+//	}
+//
+//	return search->second;
+//}
+
+void FluidFlowRoutingTable::defineRoutes(){
+	// Flow names must be defined in the CmdLine configuration (PD<->Scilab can not read strings)
+	auto flowNames =  getCmdLineParam<std::vector<std::string>>("FlowIds");
+
+	std::string flowName;
+	for(uint flowIndex=0; flowIndex<flowNames.size(); flowIndex++){
+		flowName = flowNames[flowIndex];
+//		DemuxPorts[flowName] = flowIndex; // add flowName
+
+		// create the route from CmdLine config
+		auto routeNames =  getCmdLineParam<std::vector<std::string>>(flowName + ".routeNames");
+		auto routePorts =  getCmdLineParam<std::vector<int>>(flowName + ".routePorts");
+		if(routeNames.size() != routePorts.size()){
+			throw std::runtime_error("ERROR: Parameters '"+flowName + ".routeNames' and '"+flowName + ".routePorts' must be of the same size.");
+		}
+
+		// add entries to the routing table
+		for(uint i=0; i<routeNames.size(); i++){
+			RoutingTable[routeNames[i]][flowName] = routePorts[i];
+		}
+	}
+}
+
+
+
+

@@ -1,0 +1,111 @@
+Coupled
+    {
+    Type = Root
+    Name = GettingStarted
+    Ports = 0; 0
+    Description = 
+    Graphic
+        {
+        Position = 0; 0
+        Dimension = 600; 600
+        Direction = Right
+        Color = 15
+        Icon = 
+        Window = 5000; 5000; 5000; 5000
+        }
+    Parameters
+        {
+        }
+    System
+        {
+        Atomic
+            {
+            Name = LoadScilabParams
+            Ports = 1 ; 0
+            Path = sinks/RunScilabJob.h
+            Description = If Scilab is configured as backed in the cmd line options, this model runs Scilab commands at Init, Exit and when receive events.\n
+            Graphic
+                {
+                Position = -13200 ; -10860
+                Dimension = 450 ; 435
+                Direction = Right
+                Color = 15
+                Icon = %sinks%scilab.ico
+                }
+            Parameters
+                {
+                Run at Init = Str; exec('../examples/TemplateWithInfrastructure/Scilab/model.scilabParams', 0) ; Scilab Job at Init
+                Run at External = Str;  ; Scilab Job when receive event
+                Run at Exit = Str;  ; Scilab Job at Exit
+                }
+            }
+        Atomic
+            {
+            Name = ExperimenetTracker
+            Ports = 0 ; 0
+            Path = sinks/SimulationExperimentTracker.h
+            Description = Allows to use multiple simulation runs setting new parameter values in each run. It configures Scilab variables according to the current simunation number.\nThis model should run with 1st priority!!
+            Graphic
+                {
+                Position = -10860 ; -10995
+                Dimension = 570 ; 540
+                Direction = Right
+                Color = 15
+                Icon = %realtime%lcd.svg
+                }
+            Parameters
+                {
+                ScilabSimulationSetID = Str; SimulationName ; indicates the simulation set ID
+                ScilabSimulationCounterVariableName = Str; ExperimentNumber ; Name of the Scilab variable that indicates the simulation number.
+                ScilabParametersVariableName = Str; ParameterValues ; Name of the Scilab variable that contains the parameter values for each simulation
+                ScilabParametersValuesVariableName = Str; ParameterNames ; Name of the Scilab variable that contains the parameter names for each simulation
+                }
+            }
+        Atomic
+            {
+            Name = UpdateScilabParams
+            Ports = 1 ; 0
+            Path = sinks/RunScilabJob.h
+            Description = If Scilab is configured as backed in the cmd line options, this model runs Scilab commands at Init, Exit and when receive events.\n
+            Graphic
+                {
+                Position = -8310 ; -10905
+                Dimension = 435 ; 360
+                Direction = Right
+                Color = 15
+                Icon = %sinks%scilab.ico
+                }
+            Parameters
+                {
+                Run at Init = Str;  ; Scilab Job at Init
+                Run at External = Str;  ; Scilab Job when receive event
+                Run at Exit = Str;  ; Scilab Job at Exit
+                }
+            }
+        Atomic
+            {
+            Name = FinalizationCommands
+            Ports = 0 ; 0
+            Path = sinks/multipleSimulationCommands.h
+            Description = Executes Scilab commands when using multiple simulation runs (at the end of each simulation, and at the end of ALL simulations).\nThis model should run with LAST priority
+            Graphic
+                {
+                Position = -5910 ; -11010
+                Dimension = 570 ; 570
+                Direction = Right
+                Color = 15
+                Icon = %datanetworks%scilab.bmp
+                }
+            Parameters
+                {
+                initSimulationCommandName = Str; ../examples/TemplateWithInfrastructure/Scilab/firstSimulation.sce ; 
+                eachSimulationCommandName = Str; ../examples/TemplateWithInfrastructure/Scilab/eachSimulation.sce ; 
+                lastSimulationCommandName = Str; ../examples/TemplateWithInfrastructure/Scilab/lastSimulation.sce ; 
+                }
+            }
+        Extra
+            {
+                Annotation("NOTE: Remember to update the paths in these model to the path where you save copy",-13575,-11850)
+            }
+        }
+    }

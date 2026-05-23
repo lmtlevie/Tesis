@@ -1,0 +1,81 @@
+SimulationName = "testBoundedIntegrator";
+exec('../examples/common/Scilab/model.scilabParams', 0)
+exec('../examples/common/Scilab/functions.sce', 0)
+
+if ~exists('ExperimentNumber') then
+ ExperimentNumber=0;
+end 
+if exists('ParameterValues') & ExperimentNumber >= length(ParameterValues)  then
+	ExperimentNumber=0;
+end
+printf('Starting Experiment %i ... \n', ExperimentNumber);
+
+// General
+StochasticSimu = 1;     // 1=YES (use STDEVS), 0=NO (use means as constant values).
+ReproducibleSimu = REPRODUCIBLE_SEED;   // When using STDEVS, 1="Uses always the same random numbers (Reproducible) 0="Uses unique random numbers (generates a new seed). Any other value will be used as seed"
+ParameterValues = [1]; // needs to be defined to execute
+
+
+// integrator bounds
+maxValue = 250;
+minValue = 0;
+
+// integrator QSS params
+dQmin = 1e-6;
+dQrel = 1e-3;
+
+// sources
+ConstantGenRate = maxValue * 2;
+StepGenRate = maxValue * 3;
+StepGenFrec = 1/2;
+stepTimeChanges = [0, 1, 2, 2.5, 4, 5, ..
+					 6, 7, 8, 9, 10, ..
+					  11, 12, 13, 14, 15];
+// test to check bugs					
+//stepValueChanges = [0, maxValue*2, maxValue*4, 0, maxValue, maxValue/2, ..
+ //                    maxValue*1.5, maxValue, maxValue/2, maxValue*2,  maxValue, ..
+ //                     maxValue*1.5, maxValue/3, maxValue, maxValue*1.5, maxValue/2];
+
+// nice example plot for the thesis  
+stepTimeChanges = [0, 1              , 3                    , 5                   , 7];                   
+stepValueChanges =[0, maxValue, -maxValue*2 , maxValue*2, -maxValue];                      
+stepValueChanges1 = zeros(stepValueChanges);                   
+stepValueChanges2 = zeros(stepValueChanges);
+stepValueChanges3 = zeros(stepValueChanges);
+
+// Test bug make it go negative
+//load("../library/hybrid/tests/Scilab/testBoundedInt.sod", "f_der"); // load f_der
+//stepTimeChanges = f_der.t;
+//stepValueChanges = f_der.value;
+//stepValueChanges1 = f_der.value1;
+//stepValueChanges2 = f_der.value2;
+//stepValueChanges3 = f_der.value3;
+
+// test bug that makes integrator get stuck when der1 is too big/too small
+//load("../library/hybrid/tests/Scilab/testBoundedIntegrator_bigDer1.sod", "input"); // load input
+// integrator bounds
+//maxValue = 99999*M;
+//minValue = 0;
+//dQmin = 1e-9;
+//dQrel = 1e-6;
+//C = 5*M; 
+//stepTimeChanges = input.value.value.t;
+//stepValueChanges = input.value.value.value - C;
+//stepValueChanges1 = input.value.der1.value;
+//stepValueChanges2 = input.value.der2.value;
+//stepValueChanges3 = zeros(stepValueChanges);
+
+// test bug that makes illegitimate model (must use 3rd derivative)
+//load("../library/hybrid/tests/Scilab/testBoundedInt_Illegitimate.sod", "tauDer"); // load input
+//maxValue = 0.08;
+//minValue = 0;
+//dQmin = 1e-9;
+//dQrel = 1e-6;
+//stepTimeChanges = tauDer.value.value.t;
+//stepValueChanges = tauDer.value.value.value;
+//stepValueChanges1 = tauDer.value.der1.value;
+//stepValueChanges2 = tauDer.value.der2.value;
+//stepValueChanges3  = tauDer.value.der3.value;
+
+samplingPeriodForPlots = 0.01;
+                                

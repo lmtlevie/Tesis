@@ -1,0 +1,1143 @@
+Coupled
+    {
+    Type = Root
+    Name = Data Networks (Basic Elements)
+    Ports = 0; 0
+    Description = 
+    Graphic
+        {
+        Position = 0; 0
+        Dimension = 600; 600
+        Direction = Right
+        Color = 15
+        Icon = %datanetworks%demultiplxor.png
+        Window = 5000; 5000; 5000; 5000
+        }
+    Parameters
+        {
+        }
+    System
+        {
+        Atomic
+            {
+            Name = packetLogger
+            Ports = 1 ; 0
+            Path = network/packetLogger.h
+            Description = Logs packet information (using configured logger)
+            Graphic
+                {
+                Position = -11280 ; 195
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %sinks%sink.bmp
+                }
+            Parameters
+                {
+                }
+            }
+        Atomic
+            {
+            Name = flowGenerator
+            Ports = 1 ; 1
+            Path = network/PacketFlowGenerator.h
+            Description = Generates packets using 2 distributions read from parameters: 1) for the packetSize 2) for the interleave time between each packet generation\n inPort0: can receive events that force the generation of a new packet the moment of the event arrival (can be used to generate packets following an outside source distribution)\n outPort0: generated packets
+            Graphic
+                {
+                Position = -2280 ; 3795
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %datanetworks%sink.png
+                }
+            Parameters
+                {
+                flowName = Str; flowName ; Name of the flow to retrieve its parameters
+                }
+            }
+        Atomic
+            {
+            Name = queue
+            Ports = 2 ; 2
+            Path = network/packetqueue.h
+            Description = In0 Incomming packets to queue\nIn1 Incoming signal to request dequeue\nOut0 Outgoing dequeued packets\nOut1 Outgoing queue lenght information\n\nQueues incoming packets and enqueues them as required by a\nexternal entity. FIFO Policy (FirstInFirstOut). Provides information\nits internal state.
+            Graphic
+                {
+                Position = -2280 ; 2595
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %datanetworks%queue.png
+                }
+            Parameters
+                {
+                MaxCapacity = Str; Queue.bufferSize ; Queue Capacity in bits. (Use -1 for INF capacity)
+                ForcedPeriod = Str; -1 ; Force minimum period to transition. Use -1 for INF
+                }
+            }
+        Atomic
+            {
+            Name = TCP_RCV
+            Ports = 1 ; 1
+            Path = network/packettcprcv.h
+            Description = TCP Receiver\nReceives TCP packets and sends ACK packets\n\nAplica el mecanismo de control de congestion por ventana deslizante del protocolo TCP, senalizando con paquetes ACK la recepcion del flujo entrante. (Siguiendo [SW94] y [SW95])
+            Graphic
+                {
+                Position = -705 ; 5145
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %datanetworks%server.png
+                }
+            Parameters
+                {
+                MSS = Str; TCP.MSS ; 
+                ipSender = Str; ipSender ; IP address of the sender (the one of the sender).\nThe string is used directly as IP address. It can not be a variable name as it is not looked in the parameters.
+                ipReceiver = Str; ipReceiver ; IP address of the receiver (my IP).\nThe string is used directly as IP address. It can not be a variable name as it is not looked in the parameters.
+                portSender = Str; 0 ; TCP port of the sender
+                portReceiver = Str; 0 ; TCP port of the receiver (my port)
+                }
+            }
+        Atomic
+            {
+            Name = TCP_SND
+            Ports = 2 ; 2
+            Path = network/packettcpsnd.h
+            Description = Receives packets from the upper layer (application) and forwards them using a congestion control mechanism of TCP protocol ([SW94] y [SW95])
+            Graphic
+                {
+                Position = -2280 ; 5145
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %datanetworks%tocketbucket.png
+                }
+            Parameters
+                {
+                MSS = Str; TCP.MSS ; 
+                ipSender = Str; ipSender ; My IP address (the one of the sender).\nThe string is used directly as IP address. It can not be a variable name as it is not looked in the parameters.
+                ipReceiver = Str; ipReceiver ; IP address of the receiver.\nThe string is used directly as IP address. It can not be a variable name as it is not looked in the parameters.
+                portSender = Str; 0 ; My Port. TCP port of the sender
+                portReceiver = Str; 0 ; TCP port of the receiver
+                WND_CWND_MAX = Str; TCP.CWND_max ; MAX Congestion Window (in packets) inf==NONE, Typical: 64
+                WND_SSTHRESH = Str; TCP.CWND_ssthresh ; Experimental Slow Start, 0==OFF
+                RTT_alfa = Str; 0.125 ; Typical value 0.125. RTT_alfa==0 => No moving average for RTT, only instantaneous measurements
+                T_RTT = Str; TCP.RTT_initial ; Initial Calculated Round Trip Time
+                DUP_ACK_LIMIT = Str; 3 ; Typical value 3
+                T_FORCED_RTO = Str; -1 ; T_FORCED_RTO>=0 => Forces RTO instead of calculating it
+                INTERPACKET_SND_TIME = Str; 0 ; It should look like "instantaneous" compared to RTT, maybe RTT/1000 is a good rule of thumb
+                INTER_REQ_TIME = Str; 1e-7 ; Should look like "instantaneous" compared to RTT, maybe RTT/1000 is a good rule of thumb
+                }
+            }
+        Coupled
+            {
+            Type = Coordinator
+            Name = priorityQueue
+            Ports = 2; 1
+            Description = Coupled DEVS model
+            Graphic
+                {
+                Position = -8115; -465
+                Dimension = 630; 645
+                Direction = Right
+                Color = 15
+                Icon = %datanetworks%priorityqueue.jpg
+                Window = 5000; 5000; 5000; 5000
+                }
+            Parameters
+                {
+                bufferSizePerQueue = Str; PriorityQueue.bufferSizePerQueue ; 
+                numberOfQueues = Str; 8 ; 
+                WRRScheduler.weights = Str; PriorityQueue.WRRScheduler.weights ; vector<double> with the weights for each queue
+                }
+            System
+                {
+                Inport
+                    {
+                    Name = inPackets
+                    CoupledPort = 1
+                    Description = 
+                    Graphic
+                        {
+                        Position = -10710 ; -2625
+                        Dimension = 570
+                        Direction = Right
+                        }
+                    }
+                Outport
+                    {
+                    Name = outPackets
+                    CoupledPort = 1
+                    Description = 
+                    Graphic
+                        {
+                        Position = -3990 ; -3750
+                        Dimension = 630
+                        Direction = Right
+                        }
+                    }
+                Inport
+                    {
+                    Name = inDequeReq
+                    CoupledPort = 2
+                    Description = 
+                    Graphic
+                        {
+                        Position = -5880 ; -525
+                        Dimension = 525
+                        Direction = Right
+                        }
+                    }
+                Atomic
+                    {
+                    Name = prioritySelect
+                    Ports = 1 ; 1
+                    Path = PhaseI/PacketPrioritySelect.h
+                    Description = Receives packets, and based on their flowId it selects which output port to send it through
+                    Graphic
+                        {
+                        Position = -8805 ; -2985
+                        Dimension = 675 ; 720
+                        Direction = Right
+                        Color = 15
+                        Icon = None
+                        }
+                    Parameters
+                        {
+                        }
+                    }
+                Atomic
+                    {
+                    Name = VQueues
+                    Ports = 2 ; 2
+                    Path = PhaseI/Vector_NetworkQueueWithSizeOutput.h
+                    Description = In0 Incomming packets to queue\nIn1 Incoming signal to request dequeue\nOut0 Outgoing dequeued packets\nOut1 Outgoing queue lenght information\n\nQueues incoming packets and enqueues them as required by a\nexternal entity. FIFO Policy (FirstInFirstOut). Provides information\nits internal state.
+                    Graphic
+                        {
+                        Position = -7200 ; -2805
+                        Dimension = 600 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %datanetworks%queue_vec.png
+                        }
+                    Parameters
+                        {
+                        MaxCapacity = Str; %bufferSizePerQueue ; Queue Capacity in bits. (Use -1 for INF capacity)
+                        ForcedPeriod = Str; -1 ; Force minimum period to transition. Use -1 for INF
+                        Instances = Str; %numberOfQueues ; 
+                        }
+                    }
+                Atomic
+                    {
+                    Name = WRRScheduler
+                    Ports = 2 ; 1
+                    Path = PhaseI/WRRScheduler.h
+                    Description = Atomic DEVS model
+                    Graphic
+                        {
+                        Position = -4530 ; -2505
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = None
+                        }
+                    Parameters
+                        {
+                        numberOfQueues = Str; %numberOfQueues ; 
+                        weights = Str; %WRRScheduler.weights ; vector<double> with the weights for each queue
+                        }
+                    }
+                Atomic
+                    {
+                    Name = Vect2Scal
+                    Ports = 1 ; 1
+                    Path = vector/Vector2Scalar.h
+                    Description = Vector to scalar signal
+                    Graphic
+                        {
+                        Position = -5505 ; -4080
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %vectors%vec2scalar.svg
+                        }
+                    Parameters
+                        {
+                        Index = Str; -1 ; Signal Index
+                        }
+                    }
+                Line
+                    {
+                    Source = Cmp ;  1 ;  1 ; 0
+                    Sink = Cmp ;  2 ;  1 ; -1
+                    PointX = -8025 ; -8025 ; -7365
+                    PointY = -2625 ; -2625 ; -2625
+                    }
+                Line
+                    {
+                    Source = Prt ;  1 ;  1 ; 0
+                    Sink = Cmp ;  1 ;  1 ; -1
+                    PointX = -9975 ; -9975 ; -8940
+                    PointY = -2625 ; -2625 ; -2625
+                    }
+                Line
+                    {
+                    Source = Cmp ;  2 ;  2 ; 0
+                    Sink = Cmp ;  3 ;  1 ; -1
+                    PointX = -6450 ; -6450 ; -4665
+                    PointY = -2325 ; -2325 ; -2325
+                    }
+                Line
+                    {
+                    Source = Prt ;  3 ;  1 ; 0
+                    Sink = Cmp ;  3 ;  2 ; -1
+                    PointX = -5250 ; -5025 ; -5025 ; -4665
+                    PointY = -525 ; -525 ; -2025 ; -2025
+                    }
+                Line
+                    {
+                    Source = Cmp ;  3 ;  1 ; 0
+                    Sink = Cmp ;  2 ;  2 ; -1
+                    PointX = -3750 ; -3300 ; -3300 ; -7500 ; -7500 ; -7365
+                    PointY = -2175 ; -2175 ; -1275 ; -1275 ; -2325 ; -2325
+                    }
+                Line
+                    {
+                    Source = Cmp ;  4 ;  1 ; 0
+                    Sink = Prt ;  2 ;  1 ; -1
+                    PointX = -4725 ; -4725 ; -4140
+                    PointY = -3750 ; -3750 ; -3750
+                    }
+                Line
+                    {
+                    Source = Cmp ;  4 ;  1 ; -1
+                    Sink = Cmp ;  2 ;  1 ; 0
+                    PointX = -5640 ; -6075 ; -6075 ; -6450
+                    PointY = -3750 ; -3750 ; -2625 ; -2625
+                    }
+                }
+            }
+                Atomic
+                    {
+                    Name = routingTable
+                    Ports = 4 ; 4
+                    Path = network/FlowRouter.h
+                    Description = In0: Incomming packets\nInN: Outgoing packets\n\nDemultiplexes a N input packet flows into M output packet flows.\nActs as a switch with N inports and M outports\nFor the routing decision it uses the routing table defined in FlowDefinitions.cpp
+                    Graphic
+                        {
+                        Position = -720 ; 3825
+                        Dimension = 855 ; 750
+                        Direction = Right
+                        Color = 15
+                        Icon = %datanetworks%router.jpg
+                        }
+                    Parameters
+                        {
+                        }
+                    }
+                Atomic
+                    {
+                    Name = BandwidthDelay
+                    Ports = 1 ; 1
+                    Path = network/packetLinkBandwidth.h
+                    Description = Applies a delay to incoming packets that depends on the packetSize and configured bandwidth\nserviceTime = packetSize/BW
+                    Graphic
+                        {
+                        Position = -2280 ; 1170
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %datanetworks%ethernet_vertical.jpg
+                        }
+                    Parameters
+                        {
+                        Datarate = Str; 5000000 ; Bandwith (bits/sec)
+                        }
+                    }
+                Atomic
+                    {
+                    Name = PropagationDelay
+                    Ports = 1 ; 1
+                    Path = network/packetDelay.h
+                    Description = Applies a fix delay (not depending on packetSize) to incoming packets.\nThe delay is set as a parameter and can be updated by inport1 (QSS 1 to 4).
+                    Graphic
+                        {
+                        Position = -615 ; 1170
+                        Dimension = 630 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %Continuous%delay.bmp
+                        }
+                    Parameters
+                        {
+                        Delay (linkPropagationTime) = Str; 0.001 ; Link Propagation Time (seconds)
+                        }
+                    }
+                Coupled
+                    {
+                    Type = Coordinator
+                    Name = egressPort
+                    Ports = 1; 1
+                    Description = Coupled DEVS model
+                    Graphic
+                        {
+                        Position = -2325; 6300
+                        Dimension = 2400; 600
+                        Direction = Right
+                        Color = 15
+                        Icon = %datanetworks%egressport_vertical.jpg
+                        Window = 5000; 5000; 5000; 5000
+                        }
+                    Parameters
+                        {
+                        bufferSize = Str; port.bufferSize ; 
+                        bandwidth = Str; link.bandwidth ; 
+                        propagation = Str; link.propagation ; Link propagation delay
+                        }
+                    System
+                        {
+                        Inport
+                            {
+                            Name = InPkt
+                            CoupledPort = 1
+                            Description = 
+                            Graphic
+                                {
+                                Position = -4515 ; -1875
+                                Dimension = 480
+                                Direction = Right
+                                }
+                            }
+                        Outport
+                            {
+                            Name = outPkt
+                            CoupledPort = 1
+                            Description = 
+                            Graphic
+                                {
+                                Position = 4035 ; -1875
+                                Dimension = 480
+                                Direction = Right
+                                }
+                            }
+                        Atomic
+                            {
+                            Name = queue
+                            Ports = 2 ; 2
+                            Path = network/packetqueue.h
+                            Description = In0 Incomming packets to queue\nIn1 Incoming signal to request dequeue\nOut0 Outgoing dequeued packets\nOut1 Outgoing queue lenght information\n\nQueues incoming packets and enqueues them as required by a\nexternal entity. FIFO Policy (FirstInFirstOut). Provides information\nits internal state.
+                            Graphic
+                                {
+                                Position = -2655 ; -2055
+                                Dimension = 675 ; 675
+                                Direction = Right
+                                Color = 15
+                                Icon = %datanetworks%queue.png
+                                }
+                            Parameters
+                                {
+                                MaxCapacity = Str; %bufferSize ; Queue Capacity in bits. (Use -1 for INF capacity)
+                                ForcedPeriod = Str; -1 ; Force minimum period to transition. Use -1 for INF
+                                }
+                            }
+                        Atomic
+                            {
+                            Name = BWDelay
+                            Ports = 1 ; 1
+                            Path = network/packetLinkBandwidth.h
+                            Description = Applies a delay to incoming packets that depends on the packetSize and configured bandwidth\nserviceTime = packetSize/BW
+                            Graphic
+                                {
+                                Position = -1065 ; -2250
+                                Dimension = 795 ; 765
+                                Direction = Right
+                                Color = 15
+                                Icon = %datanetworks%ethernet_vertical.jpg
+                                }
+                            Parameters
+                                {
+                                Datarate = Str; %bandwidth ; Bandwith (bits/sec)
+                                }
+                            }
+                        Atomic
+                            {
+                            Name = PropagationDelay
+                            Ports = 1 ; 1
+                            Path = network/packetDelay.h
+                            Description = Applies a fix delay (not depending on packetSize) to incoming packets.\nThe delay is set as a parameter and can be updated by inport1 (QSS 1 to 4).
+                            Graphic
+                                {
+                                Position = 960 ; -2205
+                                Dimension = 630 ; 675
+                                Direction = Right
+                                Color = 15
+                                Icon = %Continuous%delay.bmp
+                                }
+                            Parameters
+                                {
+                                Delay (linkPropagationTime) = Str; %propagation ; Link Propagation Time (seconds)
+                                }
+                            }
+                        Point
+                            {
+                            ConectedLines = 2 ; 3 ; 4
+                            ConectedExtrems = Org ; Org ; Org
+                            Position = 180 ; -1905
+                            }
+                        Line
+                            {
+                            Source = Cmp ;  1 ;  1 ; 0
+                            Sink = Cmp ;  2 ;  1 ; -1
+                            PointX = -1875 ; -1875 ; -1215
+                            PointY = -1875 ; -1875 ; -1875
+                            }
+                        Line
+                            {
+                            Source = Cmp ;  2 ;  1 ; 0
+                            Sink = Pnt ;  1 ; -1 ; 0
+                            PointX = -150 ; 180 ; 180
+                            PointY = -1875 ; -1875 ; -1905
+                            }
+                        Line
+                            {
+                            Source = Cmp ;  1 ;  2 ; -1
+                            Sink = Pnt ;  1 ; -1 ; 0
+                            PointX = -2790 ; -2790 ; 180 ; 180
+                            PointY = -1575 ; -975 ; -975 ; -1905
+                            }
+                        Line
+                            {
+                            Source = Pnt ;  1 ; -1 ; 0
+                            Sink = Cmp ;  3 ;  1 ; -1
+                            PointX = 180 ; 810 ; 810
+                            PointY = -1905 ; -1905 ; -1875
+                            }
+                        Line
+                            {
+                            Source = Prt ;  2 ; 0 ; -1
+                            Sink = Cmp ;  3 ;  1 ; 0
+                            PointX = 3885 ; 3885 ; 1725
+                            PointY = -1875 ; -1875 ; -1875
+                            }
+                        Line
+                            {
+                            Source = Cmp ;  1 ;  1 ; -1
+                            Sink = Prt ;  1 ;  1 ; 0
+                            PointX = -2790 ; -2790 ; -3900
+                            PointY = -1875 ; -1875 ; -1875
+                            }
+                        }
+                    }
+                        Coupled
+                            {
+                            Type = Coordinator
+                            Name = REDEgressPort
+                            Ports = 1; 1
+                            Description = Coupled DEVS model
+                            Graphic
+                                {
+                                Position = -2325; 7350
+                                Dimension = 2400; 600
+                                Direction = Right
+                                Color = 15
+                                Icon = %datanetworks%egressport_vertical_red.jpg
+                                Window = 5000; 5000; 5000; 5000
+                                }
+                            Parameters
+                                {
+                                bufferSize = Str; port.bufferSize ; 
+                                bandwidth = Str; link.bandwidth ; 
+                                propagation = Str; link.propagation ; Link propagation delay
+                                RED.tmin = Str; RED.tmin ; 
+                                RED.pmin = Str; RED.pmin ; 
+                                RED.tmax = Str; RED.tmax ; 
+                                RED.pmax = Str; RED.pmax ; 
+                                RED.alpha = Str; RED.alpha ; 
+                                }
+                            System
+                                {
+                                Inport
+                                    {
+                                    Name = InPkt
+                                    CoupledPort = 1
+                                    Description = 
+                                    Graphic
+                                        {
+                                        Position = -6765 ; -2025
+                                        Dimension = 480
+                                        Direction = Right
+                                        }
+                                    }
+                                Outport
+                                    {
+                                    Name = outPkt
+                                    CoupledPort = 1
+                                    Description = 
+                                    Graphic
+                                        {
+                                        Position = 4035 ; -1875
+                                        Dimension = 480
+                                        Direction = Right
+                                        }
+                                    }
+                                Atomic
+                                    {
+                                    Name = queue
+                                    Ports = 2 ; 2
+                                    Path = network/packetqueue.h
+                                    Description = In0 Incomming packets to queue\nIn1 Incoming signal to request dequeue\nOut0 Outgoing dequeued packets\nOut1 Outgoing queue lenght information\n\nQueues incoming packets and enqueues them as required by a\nexternal entity. FIFO Policy (FirstInFirstOut). Provides information\nits internal state.
+                                    Graphic
+                                        {
+                                        Position = -2655 ; -2055
+                                        Dimension = 675 ; 675
+                                        Direction = Right
+                                        Color = 15
+                                        Icon = %datanetworks%queue.png
+                                        }
+                                    Parameters
+                                        {
+                                        MaxCapacity = Str; %bufferSize ; Queue Capacity in bits. (Use -1 for INF capacity)
+                                        ForcedPeriod = Str; -1 ; Force minimum period to transition. Use -1 for INF
+                                        }
+                                    }
+                                Atomic
+                                    {
+                                    Name = BWDelay
+                                    Ports = 1 ; 1
+                                    Path = network/packetLinkBandwidth.h
+                                    Description = Applies a delay to incoming packets that depends on the packetSize and configured bandwidth\nserviceTime = packetSize/BW
+                                    Graphic
+                                        {
+                                        Position = -1065 ; -2250
+                                        Dimension = 795 ; 765
+                                        Direction = Right
+                                        Color = 15
+                                        Icon = %datanetworks%ethernet_vertical.jpg
+                                        }
+                                    Parameters
+                                        {
+                                        Datarate = Str; %bandwidth ; Bandwith (bits/sec)
+                                        }
+                                    }
+                                Atomic
+                                    {
+                                    Name = PropagationDelay
+                                    Ports = 1 ; 1
+                                    Path = network/packetDelay.h
+                                    Description = Applies a fix delay (not depending on packetSize) to incoming packets.\nThe delay is set as a parameter and can be updated by inport1 (QSS 1 to 4).
+                                    Graphic
+                                        {
+                                        Position = 960 ; -2205
+                                        Dimension = 630 ; 675
+                                        Direction = Right
+                                        Color = 15
+                                        Icon = %Continuous%delay.bmp
+                                        }
+                                    Parameters
+                                        {
+                                        Delay (linkPropagationTime) = Str; %propagation ; Link Propagation Time (seconds)
+                                        }
+                                    }
+                                Atomic
+                                    {
+                                    Name = RED_AQM
+                                    Ports = 2 ; 2
+                                    Path = network/packetRED_AQM.h
+                                    Description = Atomic DEVS model
+                                    Graphic
+                                        {
+                                        Position = -4455 ; -2280
+                                        Dimension = 660 ; 675
+                                        Direction = Right
+                                        Color = 15
+                                        Icon = %datanetworks%aqm_red.png
+                                        }
+                                    Parameters
+                                        {
+                                        minTH = Str; %RED.tmin ; Minimum queueSize threadhold to start discarding packets randomly
+                                        PminTH = Str; %RED.pmin ; Starting discard probability when queueSize=minTH
+                                        maxTH = Str; %RED.tmax ; Maximum queueSize threadhold to always discard packets
+                                        pmaxTH = Str; %RED.pmax ; Maxium discard probability when queueSize=maxTH (0 <= PminTH < PmaxTH <= 1)
+                                        alpha = Str; %RED.alpha ; The w-avg forgetting factor. Weight of the current sample vs the historical avg
+                                        }
+                                    }
+                                Point
+                                    {
+                                    ConectedLines = 2 ; 3 ; 4
+                                    ConectedExtrems = Org ; Org ; Org
+                                    Position = 180 ; -1905
+                                    }
+                                Line
+                                    {
+                                    Source = Cmp ;  1 ;  1 ; 0
+                                    Sink = Cmp ;  2 ;  1 ; -1
+                                    PointX = -1875 ; -1875 ; -1215
+                                    PointY = -1875 ; -1875 ; -1875
+                                    }
+                                Line
+                                    {
+                                    Source = Cmp ;  2 ;  1 ; 0
+                                    Sink = Pnt ;  1 ; -1 ; 0
+                                    PointX = -150 ; 180 ; 180
+                                    PointY = -1875 ; -1875 ; -1905
+                                    }
+                                Line
+                                    {
+                                    Source = Cmp ;  1 ;  2 ; -1
+                                    Sink = Pnt ;  1 ; -1 ; 0
+                                    PointX = -2790 ; -2790 ; 180 ; 180
+                                    PointY = -1575 ; -975 ; -975 ; -1905
+                                    }
+                                Line
+                                    {
+                                    Source = Pnt ;  1 ; -1 ; 0
+                                    Sink = Cmp ;  3 ;  1 ; -1
+                                    PointX = 180 ; 810 ; 810
+                                    PointY = -1905 ; -1905 ; -1875
+                                    }
+                                Line
+                                    {
+                                    Source = Prt ;  2 ; 0 ; -1
+                                    Sink = Cmp ;  3 ;  1 ; 0
+                                    PointX = 3885 ; 3885 ; 1725
+                                    PointY = -1875 ; -1875 ; -1875
+                                    }
+                                Line
+                                    {
+                                    Source = Cmp ;  4 ;  1 ; 0
+                                    Sink = Cmp ;  1 ;  1 ; -1
+                                    PointX = -3675 ; -2790 ; -2790
+                                    PointY = -2100 ; -2100 ; -1875
+                                    }
+                                Line
+                                    {
+                                    Source = Cmp ;  4 ;  1 ; -1
+                                    Sink = Prt ;  1 ;  1 ; 0
+                                    PointX = -4590 ; -4590 ; -5550 ; -5550 ; -6150
+                                    PointY = -2100 ; -2100 ; -2100 ; -2025 ; -2025
+                                    }
+                                Line
+                                    {
+                                    Source = Cmp ;  1 ;  2 ; 0
+                                    Sink = Cmp ;  4 ;  2 ; -1
+                                    PointX = -1875 ; -1875 ; -4590 ; -4590
+                                    PointY = -1575 ; -525 ; -525 ; -1800
+                                    }
+                                }
+                            }
+                                Coupled
+                                    {
+                                    Type = Coordinator
+                                    Name = priorityPort
+                                    Ports = 1; 1
+                                    Description = Coupled DEVS model
+                                    Graphic
+                                        {
+                                        Position = -8175; 1425
+                                        Dimension = 2400; 600
+                                        Direction = Right
+                                        Color = 15
+                                        Icon = %datanetworks%priorityegressport_vertical.jpg
+                                        Window = 5000; 5000; 5000; 5000
+                                        }
+                                    Parameters
+                                        {
+                                        bufferSizePerQueue = Str; port.bufferSizePerQueue ; 
+                                        bandwidth = Str; link.bandwidth ; 
+                                        propagation = Str; link.propagation ; Link propagation delay
+                                        numberOfQueues = Str; port.numberOfQueues ; Amount of prioprity queues
+                                        WRRScheduler.weights = Str; port.WRRScheduler.weights ; vector<double> with the weights for each queue
+                                        }
+                                    System
+                                        {
+                                        Inport
+                                            {
+                                            Name = InPkt
+                                            CoupledPort = 1
+                                            Description = 
+                                            Graphic
+                                                {
+                                                Position = -6765 ; -2025
+                                                Dimension = 480
+                                                Direction = Right
+                                                }
+                                            }
+                                        Outport
+                                            {
+                                            Name = outPkt
+                                            CoupledPort = 1
+                                            Description = 
+                                            Graphic
+                                                {
+                                                Position = 4035 ; -1875
+                                                Dimension = 480
+                                                Direction = Right
+                                                }
+                                            }
+                                        Atomic
+                                            {
+                                            Name = BWDelay
+                                            Ports = 1 ; 1
+                                            Path = network/packetLinkBandwidth.h
+                                            Description = Applies a delay to incoming packets that depends on the packetSize and configured bandwidth\nserviceTime = packetSize/BW
+                                            Graphic
+                                                {
+                                                Position = -1065 ; -2250
+                                                Dimension = 795 ; 765
+                                                Direction = Right
+                                                Color = 15
+                                                Icon = %datanetworks%ethernet_vertical.jpg
+                                                }
+                                            Parameters
+                                                {
+                                                Datarate = Str; %bandwidth ; Bandwith (bits/sec)
+                                                }
+                                            }
+                                        Atomic
+                                            {
+                                            Name = PropagationDelay
+                                            Ports = 1 ; 1
+                                            Path = network/packetDelay.h
+                                            Description = Applies a fix delay (not depending on packetSize) to incoming packets.\nThe delay is set as a parameter and can be updated by inport1 (QSS 1 to 4).
+                                            Graphic
+                                                {
+                                                Position = 960 ; -2205
+                                                Dimension = 630 ; 675
+                                                Direction = Right
+                                                Color = 15
+                                                Icon = %Continuous%delay.bmp
+                                                }
+                                            Parameters
+                                                {
+                                                Delay (linkPropagationTime) = Str; %propagation ; Link Propagation Time (seconds)
+                                                }
+                                            }
+                                        Coupled
+                                            {
+                                            Type = Coordinator
+                                            Name = priorityQueue
+                                            Ports = 2; 1
+                                            Description = Coupled DEVS model
+                                            Graphic
+                                                {
+                                                Position = -3315; -2190
+                                                Dimension = 630; 645
+                                                Direction = Right
+                                                Color = 15
+                                                Icon = %datanetworks%priorityqueue.jpg
+                                                Window = 5000; 5000; 5000; 5000
+                                                }
+                                            Parameters
+                                                {
+                                                bufferSizePerQueue = Str; %bufferSizePerQueue ; 
+                                                numberOfQueues = Str; %numberOfQueues ; Amount of prioprity queues
+                                                WRRScheduler.weights = Str; %WRRScheduler.weights ; vector<double> with the weights for each queue
+                                                }
+                                            System
+                                                {
+                                                Inport
+                                                    {
+                                                    Name = inPackets
+                                                    CoupledPort = 1
+                                                    Description = 
+                                                    Graphic
+                                                        {
+                                                        Position = -10710 ; -2625
+                                                        Dimension = 570
+                                                        Direction = Right
+                                                        }
+                                                    }
+                                                Outport
+                                                    {
+                                                    Name = outPackets
+                                                    CoupledPort = 1
+                                                    Description = 
+                                                    Graphic
+                                                        {
+                                                        Position = -3990 ; -3750
+                                                        Dimension = 630
+                                                        Direction = Right
+                                                        }
+                                                    }
+                                                Inport
+                                                    {
+                                                    Name = inDequeReq
+                                                    CoupledPort = 2
+                                                    Description = 
+                                                    Graphic
+                                                        {
+                                                        Position = -5880 ; -525
+                                                        Dimension = 525
+                                                        Direction = Right
+                                                        }
+                                                    }
+                                                Atomic
+                                                    {
+                                                    Name = prioritySelect
+                                                    Ports = 1 ; 1
+                                                    Path = network/PacketPrioritySelect.h
+                                                    Description = Receives packets, and based on their flowId it selects which output port to send it through
+                                                    Graphic
+                                                        {
+                                                        Position = -8805 ; -2985
+                                                        Dimension = 675 ; 720
+                                                        Direction = Right
+                                                        Color = 15
+                                                        Icon = None
+                                                        }
+                                                    Parameters
+                                                        {
+                                                        }
+                                                    }
+                                                Atomic
+                                                    {
+                                                    Name = VQueues
+                                                    Ports = 2 ; 2
+                                                    Path = network/Vector_packetqueue.h
+                                                    Description = In0 Incomming packets to queue\nIn1 Incoming signal to request dequeue\nOut0 Outgoing dequeued packets\nOut1 Outgoing queue lenght information\n\nQueues incoming packets and enqueues them as required by a\nexternal entity. FIFO Policy (FirstInFirstOut). Provides information\nits internal state.
+                                                    Graphic
+                                                        {
+                                                        Position = -7200 ; -2805
+                                                        Dimension = 600 ; 675
+                                                        Direction = Right
+                                                        Color = 15
+                                                        Icon = %datanetworks%queue_vec.png
+                                                        }
+                                                    Parameters
+                                                        {
+                                                        MaxCapacity = Str; %bufferSizePerQueue ; Queue Capacity in bits. (Use -1 for INF capacity)
+                                                        ForcedPeriod = Str; -1 ; Force minimum period to transition. Use -1 for INF
+                                                        Instances = Str; %numberOfQueues ; 
+                                                        }
+                                                    }
+                                                Atomic
+                                                    {
+                                                    Name = WRRScheduler
+                                                    Ports = 2 ; 1
+                                                    Path = network/WRRScheduler.h
+                                                    Description = Atomic DEVS model
+                                                    Graphic
+                                                        {
+                                                        Position = -4530 ; -2505
+                                                        Dimension = 675 ; 675
+                                                        Direction = Right
+                                                        Color = 15
+                                                        Icon = None
+                                                        }
+                                                    Parameters
+                                                        {
+                                                        numberOfQueues = Str; %numberOfQueues ; 
+                                                        weights = Str; %WRRScheduler.weights ; vector<double> with the weights for each queue
+                                                        }
+                                                    }
+                                                Atomic
+                                                    {
+                                                    Name = Vect2Scal
+                                                    Ports = 1 ; 1
+                                                    Path = vector/Vector2Scalar.h
+                                                    Description = Vector to scalar signal
+                                                    Graphic
+                                                        {
+                                                        Position = -5505 ; -4080
+                                                        Dimension = 675 ; 675
+                                                        Direction = Right
+                                                        Color = 15
+                                                        Icon = %vectors%vec2scalar.svg
+                                                        }
+                                                    Parameters
+                                                        {
+                                                        Index = Str; -1 ; Signal Index
+                                                        }
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Cmp ;  1 ;  1 ; 0
+                                                    Sink = Cmp ;  2 ;  1 ; -1
+                                                    PointX = -8025 ; -8025 ; -7365
+                                                    PointY = -2625 ; -2625 ; -2625
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Prt ;  1 ;  1 ; 0
+                                                    Sink = Cmp ;  1 ;  1 ; -1
+                                                    PointX = -9975 ; -9975 ; -8940
+                                                    PointY = -2625 ; -2625 ; -2625
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Cmp ;  2 ;  2 ; 0
+                                                    Sink = Cmp ;  3 ;  1 ; -1
+                                                    PointX = -6450 ; -6450 ; -4665
+                                                    PointY = -2325 ; -2325 ; -2325
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Prt ;  3 ;  1 ; 0
+                                                    Sink = Cmp ;  3 ;  2 ; -1
+                                                    PointX = -5250 ; -5025 ; -5025 ; -4665
+                                                    PointY = -525 ; -525 ; -2025 ; -2025
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Cmp ;  3 ;  1 ; 0
+                                                    Sink = Cmp ;  2 ;  2 ; -1
+                                                    PointX = -3750 ; -3300 ; -3300 ; -7500 ; -7500 ; -7365
+                                                    PointY = -2175 ; -2175 ; -1275 ; -1275 ; -2325 ; -2325
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Cmp ;  4 ;  1 ; 0
+                                                    Sink = Prt ;  2 ;  1 ; -1
+                                                    PointX = -4725 ; -4725 ; -4140
+                                                    PointY = -3750 ; -3750 ; -3750
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Cmp ;  4 ;  1 ; -1
+                                                    Sink = Cmp ;  2 ;  1 ; 0
+                                                    PointX = -5640 ; -6075 ; -6075 ; -6450
+                                                    PointY = -3750 ; -3750 ; -2625 ; -2625
+                                                    }
+                                                }
+                                            }
+                                                Point
+                                                    {
+                                                    ConectedLines = 1 ; 4 ; 5
+                                                    ConectedExtrems = Org ; Org ; Org
+                                                    Position = 0 ; -1875
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Cmp ;  1 ;  1 ; 0
+                                                    Sink = Pnt ;  1 ; -1 ; 0
+                                                    PointX = -150 ; -150 ; 0
+                                                    PointY = -1875 ; -1875 ; -1875
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Prt ;  2 ; 0 ; -1
+                                                    Sink = Cmp ;  2 ;  1 ; 0
+                                                    PointX = 3885 ; 3885 ; 1725
+                                                    PointY = -1875 ; -1875 ; -1875
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Cmp ;  3 ;  1 ; 0
+                                                    Sink = Cmp ;  1 ;  1 ; -1
+                                                    PointX = -2550 ; -2550 ; -1215
+                                                    PointY = -1875 ; -1875 ; -1875
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Cmp ;  3 ;  2 ; -1
+                                                    Sink = Pnt ;  1 ; -1 ; 0
+                                                    PointX = -3465 ; -3465 ; 0 ; 0
+                                                    PointY = -1725 ; -600 ; -600 ; -1875
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Pnt ;  1 ; -1 ; 0
+                                                    Sink = Cmp ;  2 ;  1 ; -1
+                                                    PointX = 0 ; 180 ; 150 ; 150 ; 810
+                                                    PointY = -1875 ; -1875 ; -1875 ; -1875 ; -1875
+                                                    }
+                                                Line
+                                                    {
+                                                    Source = Cmp ;  3 ;  1 ; -1
+                                                    Sink = Prt ;  1 ;  1 ; 0
+                                                    PointX = -3465 ; -3465 ; -6150
+                                                    PointY = -2025 ; -2025 ; -2025
+                                                    }
+                                        }
+                                    }
+                                                Atomic
+                                                    {
+                                                    Name = RandomEarlyDiscard
+                                                    Ports = 2 ; 2
+                                                    Path = network/packetRED_AQM.h
+                                                    Description = Atomic DEVS model
+                                                    Graphic
+                                                        {
+                                                        Position = -630 ; 2595
+                                                        Dimension = 660 ; 675
+                                                        Direction = Right
+                                                        Color = 15
+                                                        Icon = %datanetworks%aqm_red.png
+                                                        }
+                                                    Parameters
+                                                        {
+                                                        minTH = Str; RED.tmin ; Minimum queueSize threadhold to start discarding packets randomly
+                                                        PminTH = Str; RED.pmin ; Starting discard probability when queueSize=minTH
+                                                        maxTH = Str; RED.tmax ; Maximum queueSize threadhold to always discard packets
+                                                        pmaxTH = Str; RED.pmax ; Maxium discard probability when queueSize=maxTH (0 <= PminTH < PmaxTH <= 1)
+                                                        alpha = Str; RED.alpha ; The w-avg forgetting factor. Weight of the current sample vs the historical avg
+                                                        }
+                                                    }
+                                                Atomic
+                                                    {
+                                                    Name = demux_TcpPort
+                                                    Ports = 1 ; 4
+                                                    Path = network/TcpPortDemux.h
+                                                    Description = In0: Incomming packets\noutN: Outgoing packets\n\nDemultiplexes a packets using the TCP dst port. \noutport is calculated as outport=mod(floor(pkt.dstPort/divisor), modulo)
+                                                    Graphic
+                                                        {
+                                                        Position = -13020 ; 1860
+                                                        Dimension = 690 ; 780
+                                                        Direction = Right
+                                                        Color = 15
+                                                        Icon = %datanetworks%demultiplxor.png
+                                                        }
+                                                    Parameters
+                                                        {
+                                                        modulo = Str; 4 ; modulo to apply to port
+                                                        divisor = Str; 4 ; divisor to apply
+                                                        use_dst = Str; 0 ; 0:getPortSrc; 1:getPortDst
+                                                        }
+                                                    }
+                                                Atomic
+                                                    {
+                                                    Name = demux_TcpIp
+                                                    Ports = 1 ; 3
+                                                    Path = network/TcpIpDemux.h
+                                                    Description = In0: Incomming packets\noutN: Outgoing packets\n\nDemultiplexes a packets using the TCP getIpSrc\n
+                                                    Graphic
+                                                        {
+                                                        Position = -11370 ; 1860
+                                                        Dimension = 690 ; 780
+                                                        Direction = Right
+                                                        Color = 15
+                                                        Icon = %datanetworks%demultiplxor.png
+                                                        }
+                                                    Parameters
+                                                        {
+                                                        label0 = Str; FlowId1 ; IP to match for outgoing port0
+                                                        label1 = Str; FlowId2 ; IP to match for outgoing port1
+                                                        label2 = Str; FlowId3 ; IP to match for outgoing port2
+                                                        label3 = Str; * ; IP to match for outgoing port3
+                                                        }
+                                                    }
+                                                Atomic
+                                                    {
+                                                    Name = pktGenerator
+                                                    Ports = 1 ; 1
+                                                    Path = network/packetgen.h
+                                                    Description = Generates packets using 2 distributions read from parameters: 1) for the packetSize 2) for the interleave time between each packet generation\n inPort0: can receive events that force the generation of a new packet the moment of the event arrival (can be used to generate packets following an outside source distribution)\n outPort0: generated packets
+                                                    Graphic
+                                                        {
+                                                        Position = -4215 ; -1395
+                                                        Dimension = 645 ; 690
+                                                        Direction = Right
+                                                        Color = 15
+                                                        Icon = %datanetworks%sink.png
+                                                        }
+                                                    Parameters
+                                                        {
+                                                        FlowID = Str; FlowName ; 
+                                                        period = Str; period ; parameter name which specifies the distribution
+                                                        packet_size = Str; psize ; parameter name which specifies the distribution
+                                                        Packet Overhead Size bits = Str; 376 ; 
+                                                        StartStopTimes = Str; [0,1, 5] ; list of start and stop times
+                                                        }
+                                                    }
+        }
+    }
