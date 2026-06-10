@@ -44,29 +44,27 @@ snprintf(ScriptName, sizeof(ScriptName), "%s.hist.plt", FName);
 
 FILE* DataOutput = fopen(DataName, "w");
 if (DataOutput) {
-  fprintf(DataOutput, "\"shots\"");
-  for (int i=0;i<n;i++) fprintf(DataOutput, " %g", k[i]);
-  fprintf(DataOutput, "\n");
+  for (int i=0;i<n;i++) fprintf(DataOutput, "%d %g\n", i, k[i]);
   fclose(DataOutput);
 }
 
 FILE* ScriptOutput = fopen(ScriptName, "w");
 if (ScriptOutput) {
   fprintf(ScriptOutput, "set title 'Measurement histogram'\n");
-  fprintf(ScriptOutput, "set xlabel 'experiment'\n");
+  fprintf(ScriptOutput, "set xlabel 'measurement result'\n");
   fprintf(ScriptOutput, "set ylabel 'count'\n");
   fprintf(ScriptOutput, "set key outside right top title 'Result'\n");
   fprintf(ScriptOutput, "set grid ytics\n");
-  fprintf(ScriptOutput, "set style data histograms\n");
-  fprintf(ScriptOutput, "set style histogram clustered gap 1\n");
+  fprintf(ScriptOutput, "set style data boxes\n");
   fprintf(ScriptOutput, "set style fill solid 0.85 border rgb '#222222'\n");
   fprintf(ScriptOutput, "set boxwidth 0.6\n");
-  fprintf(ScriptOutput, "set auto x\n");
+  fprintf(ScriptOutput, "set xtics 1\n");
+  fprintf(ScriptOutput, "set xrange [-0.5:%g]\n", n - 0.5);
   fprintf(ScriptOutput, "set yrange [0:*]\n");
   fprintf(ScriptOutput, "plot ");
   for (int i=0;i<n;i++) {
     const char* color = (i == 0) ? "#1f77b4" : (i == 1) ? "#d62728" : "#2ca02c";
-    fprintf(ScriptOutput, "'%s' using %d:xtic(1) lc rgb '%s' title 'result %d'", DataName, i + 2, color, i);
+    fprintf(ScriptOutput, "'%s' every ::%d::%d using 1:2 lc rgb '%s' title 'result %d'", DataName, i, i, color, i);
     if (i + 1 < n) fprintf(ScriptOutput, ", ");
   }
   fprintf(ScriptOutput, "\n");
