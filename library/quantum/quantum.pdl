@@ -254,5 +254,23 @@ Coupled
                 Random seed = Str; 0 ;
                 }
             }
+        Atomic
+            {
+            Name = Q Count
+            Ports = 1 ; 2
+            Path = quantum\qcount.h
+            Description = Counts classical measurement results. Output 0 is the accumulated number of zeros; output 1 is the accumulated number of ones.
+            Graphic
+                {
+                Position = 1170 ; 0
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%qcount.svg
+                }
+            Parameters
+                {
+                }
+            }
         }
     }

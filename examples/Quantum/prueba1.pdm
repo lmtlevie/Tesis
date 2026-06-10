@@ -177,13 +177,49 @@ Coupled
                     }
                 Atomic
                     {
+                    Name = Q Count0
+                    Ports = 1 ; 2
+                    Path = quantum\qcount.h
+                    Description = Counts classical measurement results. Output 0 is the accumulated number of zeros; output 1 is the accumulated number of ones.
+                    Graphic
+                        {
+                        Position = -1260 ; -3930
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %quantum%qcount.svg
+                        }
+                    Parameters
+                        {
+                        }
+                    }
+                Atomic
+                    {
+                    Name = Q Count1
+                    Ports = 1 ; 2
+                    Path = quantum\qcount.h
+                    Description = Counts classical measurement results. Output 0 is the accumulated number of zeros; output 1 is the accumulated number of ones.
+                    Graphic
+                        {
+                        Position = -1260 ; -2880
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %quantum%qcount.svg
+                        }
+                    Parameters
+                        {
+                        }
+                    }
+                Atomic
+                    {
                     Name = GnuPlot0
-                    Ports = 2 ; 0
+                    Ports = 4 ; 0
                     Path = sinks/gnuplot.h
                     Description = Plot input signal using GnuPlot
                     Graphic
                         {
-                        Position = -1260 ; -4200
+                        Position = 195 ; -4200
                         Dimension = 2385 ; 2265
                         Direction = Right
                         Color = 15
@@ -192,11 +228,11 @@ Coupled
                     Parameters
                         {
                         Inputs = Str; %Inputs ; Number of inputs
-                        Format = Str; set xrange [0:%tf] @ set yrange [-0.2:1.2] @ set ytics 0,1,1 @ set grid ytics @ set xlabel 'shot time' @ set ylabel 'measurement' @ set title 'Bell circuit measurements' ; General Formatting (use @ as line break)
-                        Format1 = Str; with points pt 7 ps 1.5 lc rgb '#1f77b4' title 'q0' ; Formatting options for input 1
-                        Format2 = Str; with points pt 5 ps 1.5 lc rgb '#d62728' title 'q1' ; Formatting options for input 2
-                        Format3 = Str;  ; Formatting options for input 3
-                        Format4 = Str;  ; Formatting options for input 4
+                        Format = Str; set xrange [0:%tf] @ set yrange [0:20] @ set ytics 0,2,20 @ set grid ytics @ set xlabel 'simulation time' @ set ylabel 'accumulated counts' @ set title 'Measurement counts after 20 shots' ; General Formatting (use @ as line break)
+                        Format1 = Str; with steps lw 2 lc rgb '#1f77b4' title 'q0 -> 0' ; Formatting options for input 1
+                        Format2 = Str; with steps lw 2 lc rgb '#d62728' title 'q0 -> 1' ; Formatting options for input 2
+                        Format3 = Str; with steps lw 2 dt 2 lc rgb '#2ca02c' title 'q1 -> 0' ; Formatting options for input 3
+                        Format4 = Str; with steps lw 2 dt 2 lc rgb '#9467bd' title 'q1 -> 1' ; Formatting options for input 4
                         Format5 = Str;  ; Formatting options for input 5
                         }
                     }
@@ -245,9 +281,37 @@ Coupled
                 Line
                     {
                     Source = Cmp ;  6 ;  1 ; 0
-                    Sink = Cmp ;  8 ;  2 ; -1
+                    Sink = Cmp ;  9 ;  1 ; -1
                     PointX = -2100 ; -2100 ; -1440
                     PointY = -2550 ; -2550 ; -2550
+                    }
+                Line
+                    {
+                    Source = Cmp ;  8 ;  1 ; 0
+                    Sink = Cmp ;  10 ;  1 ; -1
+                    PointX = -585 ; -585 ; 15
+                    PointY = -3600 ; -3600 ; -3600
+                    }
+                Line
+                    {
+                    Source = Cmp ;  8 ;  2 ; 0
+                    Sink = Cmp ;  10 ;  2 ; -1
+                    PointX = -585 ; -585 ; 15
+                    PointY = -3600 ; -3825 ; -3825
+                    }
+                Line
+                    {
+                    Source = Cmp ;  9 ;  1 ; 0
+                    Sink = Cmp ;  10 ;  3 ; -1
+                    PointX = -585 ; -585 ; 15
+                    PointY = -2550 ; -3150 ; -3150
+                    }
+                Line
+                    {
+                    Source = Cmp ;  9 ;  2 ; 0
+                    Sink = Cmp ;  10 ;  4 ; -1
+                    PointX = -585 ; -585 ; 15
+                    PointY = -2550 ; -2925 ; -2925
                     }
                 }
             }
