@@ -210,9 +210,9 @@ Coupled
                 Atomic
                     {
                     Name = Event Counter
-                    Ports = 1 ; 0
+                    Ports = 1 ; 1
                     Path = sinks/ev_count2.h
-                    Description = Saves in a file the number of events received at each port.
+                    Description = Counts events received at each input port, emits the accumulated count through the matching output port, and writes a histogram file at exit.
                     Graphic
                         {
                         Position = 2490 ; 270

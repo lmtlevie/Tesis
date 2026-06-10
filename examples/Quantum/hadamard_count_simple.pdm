@@ -137,31 +137,6 @@ Coupled
                         Inputs = Str; %Inputs ; Number of Inputs
                         }
                     }
-                Atomic
-                    {
-                    Name = GnuPlot0
-                    Ports = 2 ; 0
-                    Path = sinks/gnuplot.h
-                    Description = Plots accumulated measurement counts.
-                    Graphic
-                        {
-                        Position = -2955 ; -3255
-                        Dimension = 1620 ; 1170
-                        Direction = Right
-                        Color = 15
-                        Icon = %sinks%gnuplot.svg
-                        }
-                    Parameters
-                        {
-                        Inputs = Str; %Inputs ; Number of inputs
-                        Format = Str; set xrange [0:%tf] @ set yrange [0:100] @ set ytics 0,10,100 @ set grid ytics @ set xlabel 'simulation time' @ set ylabel 'accumulated count' @ set title 'Hadamard measurement counts' ; General Formatting (use @ as line break)
-                        Format1 = Str; with steps lw 2 lc rgb '#1f77b4' title '0 count' ; Formatting options for input 1
-                        Format2 = Str; with steps lw 2 lc rgb '#d62728' title '1 count' ; Formatting options for input 2
-                        Format3 = Str;  ; Formatting options for input 3
-                        Format4 = Str;  ; Formatting options for input 4
-                        Format5 = Str;  ; Formatting options for input 5
-                        }
-                    }
                 Line
                     {
                     Source = Cmp ;  2 ;  1 ; 0
@@ -188,20 +163,6 @@ Coupled
                     Source = Cmp ;  4 ;  2 ; 0
                     Sink = Cmp ;  5 ;  2 ; -1
                     PointX = -5250 ; -5250 ; -4665
-                    PointY = -2775 ; -2775 ; -2775
-                    }
-                Line
-                    {
-                    Source = Cmp ;  5 ;  1 ; 0
-                    Sink = Cmp ;  6 ;  1 ; -1
-                    PointX = -3765 ; -3765 ; -3090
-                    PointY = -3075 ; -3075 ; -3075
-                    }
-                Line
-                    {
-                    Source = Cmp ;  5 ;  2 ; 0
-                    Sink = Cmp ;  6 ;  2 ; -1
-                    PointX = -3765 ; -3765 ; -3090
                     PointY = -2775 ; -2775 ; -2775
                     }
                 }

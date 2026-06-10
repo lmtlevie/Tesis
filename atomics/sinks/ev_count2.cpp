@@ -1,5 +1,8 @@
 #include "ev_count2.h"
+#include "pdevslib.h"
 #include <cstdlib>
+#include <cstdio>
+#include <cstring>
 
 void ev_count2::init(double t,...) {
 va_list parameters;
@@ -33,6 +36,40 @@ for (int i=0;i<n;i++){
   fprintf(FOutput, "%g\n",k[i]);
   };
 fclose(FOutput);
+
+char DataName[256];
+char ScriptName[256];
+snprintf(DataName, sizeof(DataName), "%s.hist.dat", FName);
+snprintf(ScriptName, sizeof(ScriptName), "%s.hist.plt", FName);
+
+FILE* DataOutput = fopen(DataName, "w");
+if (DataOutput) {
+  for (int i=0;i<n;i++) fprintf(DataOutput, "\"%d\" %g\n", i, k[i]);
+  fclose(DataOutput);
+}
+
+FILE* ScriptOutput = fopen(ScriptName, "w");
+if (ScriptOutput) {
+  fprintf(ScriptOutput, "set title 'Measurement histogram'\n");
+  fprintf(ScriptOutput, "set xlabel 'measurement result'\n");
+  fprintf(ScriptOutput, "set ylabel 'count'\n");
+  fprintf(ScriptOutput, "set style data histograms\n");
+  fprintf(ScriptOutput, "set style histogram clustered gap 1\n");
+  fprintf(ScriptOutput, "set style fill solid 0.75 border -1\n");
+  fprintf(ScriptOutput, "set boxwidth 0.6\n");
+  fprintf(ScriptOutput, "set yrange [0:*]\n");
+  fprintf(ScriptOutput, "plot '%s' using 2:xtic(1) title 'shots'\n", DataName);
+  if (getOs()!=WINDOWS) fprintf(ScriptOutput, "pause -1\n");
+  else fprintf(ScriptOutput, "pause 3600\n");
+  fclose(ScriptOutput);
+  if (getOs()!=WINDOWS) spawnProcess("/usr/bin/gnuplot", ScriptName);
+  else {
+    char buff[300];
+    strcpy(buff, ScriptName);
+    strcat(buff, " -");
+    spawnProcess("../bin/gnuplot/bin/wgnuplot.exe", buff);
+  }
+}
 
 //putScilabVar("ev(n)",k[0]);
 }
