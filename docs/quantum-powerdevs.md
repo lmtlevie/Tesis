@@ -154,6 +154,46 @@ Luego:
 - `Q Count` acumula esos eventos clasicos;
 - `GnuPlot` solo ve numeros clasicos.
 
+## Shots vs multiples simulaciones
+
+En PowerDEVS existen ejemplos de "multiples simulation runs" usando:
+
+- `SimulationExperimentTracker`
+- `RunScilabJob`
+- `multipleSimulationCommands`
+
+Ese patron aparece en modelos como `examples/dde/oberle_and_pesch.pdm` y sirve
+para barrer parametros entre corridas completas, guardar resultados en Scilab y
+ejecutar comandos al final de cada simulacion.
+
+Para estimar resultados de una medicion cuantica no hace falta lanzar muchas
+simulaciones completas. Un "shot" cuantico es repetir el mismo circuito con el
+mismo estado inicial y volver a medir. En DEVS esto se representa naturalmente
+como eventos dentro de una misma simulacion:
+
+```text
+Q Zero / Q One reemiten cada Shot period
+QuantumContext reinicia el StateVector al comienzo de cada shot
+Measure produce 0 o 1
+Q Count acumula frecuencias
+```
+
+Tambien existen contadores generales en `sinks`, por ejemplo `Event Counter`,
+pero cuentan cantidad de eventos por puerto y guardan a archivo. Para mediciones
+cuanticas necesitamos contar por valor (`0` o `1`) y graficar durante la
+simulacion; por eso `Q Count` es un contador especifico para la salida clasica de
+`Measure`.
+
+Usar `SimulationExperimentTracker` tendria sentido si se quiere comparar muchas
+configuraciones distintas, por ejemplo:
+
+- distintos circuitos;
+- distintos valores de parametros;
+- distintos numeros de qubits;
+- distintos seeds controlados por corrida.
+
+Para un histograma de un mismo circuito, usar `Shots` + `Q Count`.
+
 ## Errores que aprendimos a reconocer
 
 `undefined reference to vtable for ...`
