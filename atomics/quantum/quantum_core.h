@@ -10,6 +10,8 @@
 class quantum_core: public Simulator {
 double sigma;
 int nqubits;
+int shots;
+double shot_period;
 public:
 	quantum_core(const char *n): Simulator(n) {};
 	void init(double, ...);

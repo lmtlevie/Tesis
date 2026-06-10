@@ -6,8 +6,12 @@
 void quantum_core::init(double t,...) {
 	va_list p; va_start(p,t);
 	nqubits = qparse_i(va_arg(p,char*));
+	shots = qparse_i(va_arg(p,char*));
+	shot_period = qparse_d(va_arg(p,char*));
 	if (nqubits < 1) nqubits = 1;
-	quantum_context_for(this, nqubits)->configure(nqubits, std::string("0"));
+	QuantumContext* ctx = quantum_context_for(this, nqubits);
+	ctx->configure(nqubits, std::string("0"));
+	ctx->configure_shots(shots, shot_period);
 	sigma = INFINITY;
 }
 double quantum_core::ta(double t) { return sigma; }

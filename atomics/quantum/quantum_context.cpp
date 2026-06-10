@@ -15,6 +15,9 @@ QuantumContext::QuantumContext() {
 	nqubits = 0;
 	locked = false;
 	next_auto_qubit = 0;
+	shot_count = 1;
+	current_shot = -1;
+	shot_period_value = 1.0;
 	state_data.N = 0;
 	state_data.dim = 0;
 	state_data.psi = NULL;
@@ -26,6 +29,7 @@ void QuantumContext::configure(int n, const std::string& initial_state) {
 	nqubits = n;
 	locked = false;
 	next_auto_qubit = 0;
+	current_shot = -1;
 	initial_bits.assign(nqubits, 0);
 	int len = (int)initial_state.size();
 	for (int i = 0; i < nqubits && i < len; i++) {
@@ -41,8 +45,24 @@ void QuantumContext::configure(int n, const std::string& initial_state) {
 	rebuild_basis_state();
 }
 
+void QuantumContext::configure_shots(int shots, double period) {
+	if (shots < 1) shots = 1;
+	if (period <= 0.0) period = 1.0;
+	shot_count = shots;
+	shot_period_value = period;
+	current_shot = -1;
+}
+
 int QuantumContext::size() const {
 	return nqubits;
+}
+
+int QuantumContext::shots() const {
+	return shot_count;
+}
+
+double QuantumContext::shot_period() const {
+	return shot_period_value;
 }
 
 int QuantumContext::allocate_qubit() {
@@ -74,6 +94,14 @@ void QuantumContext::set_initial_qubit(int q, int value) {
 	if (q >= nqubits || locked) return;
 	initial_bits[q] = value ? 1 : 0;
 	rebuild_basis_state();
+}
+
+void QuantumContext::begin_shot(int shot) {
+	if (shot == current_shot) return;
+	current_shot = shot;
+	locked = false;
+	rebuild_basis_state();
+	locked = false;
 }
 
 void QuantumContext::apply_one(int q, const std::complex<double> U[4]) {

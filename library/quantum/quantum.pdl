@@ -35,6 +35,8 @@ Coupled
             Parameters
                 {
                 Number of qubits = Str; 2 ;
+                Shots = Str; 1 ;
+                Shot period = Str; 1 ;
                 }
             }
         Coupled
@@ -74,6 +76,8 @@ Coupled
                     Parameters
                         {
                         Number of qubits = Str; 2 ;
+                        Shots = Str; 1 ;
+                        Shot period = Str; 1 ;
                         }
                     }
                 }
@@ -132,7 +136,7 @@ Coupled
                 }
             Parameters
                 {
-                Processing time = Str; 0 ;
+                Processing time = Str; 0.1 ;
                 }
             }
         Atomic
@@ -151,7 +155,7 @@ Coupled
                 }
             Parameters
                 {
-                Processing time = Str; 0 ;
+                Processing time = Str; 0.1 ;
                 }
             }
         Atomic
@@ -170,7 +174,7 @@ Coupled
                 }
             Parameters
                 {
-                Processing time = Str; 0 ;
+                Processing time = Str; 0.1 ;
                 }
             }
         Atomic
@@ -189,7 +193,7 @@ Coupled
                 }
             Parameters
                 {
-                Processing time = Str; 0 ;
+                Processing time = Str; 0.1 ;
                 }
             }
         Atomic
@@ -208,7 +212,7 @@ Coupled
                 }
             Parameters
                 {
-                Processing time = Str; 0 ;
+                Processing time = Str; 0.1 ;
                 }
             }
         Atomic
@@ -227,7 +231,7 @@ Coupled
                 }
             Parameters
                 {
-                Processing time = Str; 0 ;
+                Processing time = Str; 0.1 ;
                 }
             }
         Atomic
@@ -246,7 +250,7 @@ Coupled
                 }
             Parameters
                 {
-                Processing time = Str; 0 ;
+                Processing time = Str; 0.1 ;
                 Random seed = Str; 0 ;
                 }
             }

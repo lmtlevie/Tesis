@@ -11,6 +11,7 @@
 class qzero: public Simulator {
 double sigma;
 int qubit;
+int shot;
 QuantumWire wire;
 public:
 	qzero(const char *n): Simulator(n) {};

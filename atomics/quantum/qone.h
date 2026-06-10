@@ -11,6 +11,7 @@
 class qone: public Simulator {
 double sigma;
 int qubit;
+int shot;
 QuantumWire wire;
 public:
 	qone(const char *n): Simulator(n) {};

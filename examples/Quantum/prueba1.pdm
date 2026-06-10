@@ -55,6 +55,8 @@ Coupled
                     Parameters
                         {
                         Number of qubits = Str; 2 ; 
+                        Shots = Str; 20 ; 
+                        Shot period = Str; 2 ; 
                         }
                     }
                 Atomic
@@ -111,7 +113,7 @@ Coupled
                         }
                     Parameters
                         {
-                        Processing time = Str; 0 ; 
+                        Processing time = Str; 0.5 ; 
                         }
                     }
                 Atomic
@@ -130,7 +132,7 @@ Coupled
                         }
                     Parameters
                         {
-                        Processing time = Str; 0 ; 
+                        Processing time = Str; 0.5 ; 
                         }
                     }
                 Atomic
@@ -149,7 +151,7 @@ Coupled
                         }
                     Parameters
                         {
-                        Processing time = Str; 0 ; 
+                        Processing time = Str; 0.25 ; 
                         Random seed = Str; 0 ; 
                         }
                     }
@@ -169,7 +171,7 @@ Coupled
                         }
                     Parameters
                         {
-                        Processing time = Str; 0 ; 
+                        Processing time = Str; 0.25 ; 
                         Random seed = Str; 0 ; 
                         }
                     }
@@ -190,9 +192,9 @@ Coupled
                     Parameters
                         {
                         Inputs = Str; %Inputs ; Number of inputs
-                        Format = Str; set xrange [0:%tf] @ set yrange [-0.1:1.1] @ set ytics 0,1,1 @ set grid @ set title 'Quantum measurements' ; General Formatting (use @ as line break)
-                        Format1 = Str; with impulses title 'q0' ; Formatting options for input 1
-                        Format2 = Str; with impulses title 'q1' ; Formatting options for input 2
+                        Format = Str; set xrange [0:%tf] @ set yrange [-0.2:1.2] @ set ytics 0,1,1 @ set grid ytics @ set xlabel 'shot time' @ set ylabel 'measurement' @ set title 'Bell circuit measurements' ; General Formatting (use @ as line break)
+                        Format1 = Str; with points pt 7 ps 1.5 lc rgb '#1f77b4' title 'q0' ; Formatting options for input 1
+                        Format2 = Str; with points pt 5 ps 1.5 lc rgb '#d62728' title 'q1' ; Formatting options for input 2
                         Format3 = Str;  ; Formatting options for input 3
                         Format4 = Str;  ; Formatting options for input 4
                         Format5 = Str;  ; Formatting options for input 5

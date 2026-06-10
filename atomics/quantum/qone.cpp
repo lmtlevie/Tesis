@@ -8,13 +8,19 @@ void qone::init(double t,...) {
 	if (qubit < 0) qubit = wire.context->allocate_qubit();
 	wire.context->set_initial_qubit(qubit, 1);
 	wire.qubit = qubit;
+	shot = 0;
 	sigma = 0;
 }
 double qone::ta(double t) { return sigma; }
-void qone::dint(double t) { sigma = INFINITY; }
+void qone::dint(double t) {
+	shot++;
+	if (wire.context && shot < wire.context->shots()) sigma = wire.context->shot_period();
+	else sigma = INFINITY;
+}
 void qone::dext(Event e, double t) {}
 Event qone::lambda(double t) {
 	wire.context = quantum_context_for(this, qubit >= 0 ? qubit + 1 : 1);
+	wire.context->begin_shot(shot);
 	wire.qubit = qubit;
 	return Event(&wire, 0);
 }
