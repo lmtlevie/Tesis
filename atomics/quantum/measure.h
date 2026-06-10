@@ -11,6 +11,7 @@ class measure: public Simulator {
 double sigma;
 double processing_time;
 double output[1];
+int output_port;
 std::mt19937 rng;
 public:
 	measure(const char *n): Simulator(n) {};

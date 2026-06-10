@@ -1,0 +1,171 @@
+Coupled
+    {
+    Type = Root
+    Name = hadamard_count_simple
+    Ports = 0; 0
+    Description = Minimal Hadamard measurement counting example. Measure routes result 0/1 to Event Counter ports.
+    Graphic
+        {
+        Position = 0; 0
+        Dimension = 600; 600
+        Direction = Right
+        Color = 15
+        Icon = 
+        Window = 5000; 5000; 5000; 5000
+        }
+    Parameters
+        {
+        }
+    System
+        {
+        Coupled
+            {
+            Type = Coordinator
+            Name = Quantum Circuit0
+            Ports = 0; 0
+            Description = Coupled quantum circuit workspace with one internal Quantum Core.
+            Graphic
+                {
+                Position = -4000; -600
+                Dimension = 675; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%quantum.svg
+                Window = 5000; 5000; 5000; 5000
+                }
+            Parameters
+                {
+                }
+            System
+                {
+                Atomic
+                    {
+                    Name = Quantum Core
+                    Ports = 0 ; 0
+                    Path = quantum\quantum_core.h
+                    Description = Owns the shared StateVector for this Quantum Circuit.
+                    Graphic
+                        {
+                        Position = -9000 ; -1500
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %quantum%quantum.svg
+                        }
+                    Parameters
+                        {
+                        Number of qubits = Str; 1 ;
+                        Shots = Str; 100 ;
+                        Shot period = Str; 1 ;
+                        }
+                    }
+                Atomic
+                    {
+                    Name = Q Zero0
+                    Ports = 0 ; 1
+                    Path = quantum\qzero.h
+                    Description = Emits qubit 0 initialized to |0>.
+                    Graphic
+                        {
+                        Position = -9000 ; -3300
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %quantum%qzero.svg
+                        }
+                    Parameters
+                        {
+                        Qubit index = Str; -1 ;
+                        }
+                    }
+                Atomic
+                    {
+                    Name = H0
+                    Ports = 1 ; 1
+                    Path = quantum\h.h
+                    Description = Hadamard gate on the only qubit.
+                    Graphic
+                        {
+                        Position = -7500 ; -3300
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %quantum%h.svg
+                        }
+                    Parameters
+                        {
+                        Processing time = Str; 0.1 ;
+                        }
+                    }
+                Atomic
+                    {
+                    Name = Measure0
+                    Ports = 1 ; 2
+                    Path = quantum\measure.h
+                    Description = Measures the qubit. Output port 0 means result 0; output port 1 means result 1.
+                    Graphic
+                        {
+                        Position = -6000 ; -3300
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %quantum%measure.svg
+                        }
+                    Parameters
+                        {
+                        Processing time = Str; 0.1 ;
+                        Random seed = Str; 0 ;
+                        }
+                    }
+                Atomic
+                    {
+                    Name = Event Counter0
+                    Ports = 2 ; 0
+                    Path = sinks/ev_count2.h
+                    Description = Counts events received at each port. Port 0 counts zeros; port 1 counts ones.
+                    Graphic
+                        {
+                        Position = -4500 ; -3300
+                        Dimension = 720 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %sinks%coun_ev.bmp
+                        }
+                    Parameters
+                        {
+                        File = Str; hadamard_counts.txt ; file name
+                        Inputs = Str; %Inputs ; Number of Inputs
+                        }
+                    }
+                Line
+                    {
+                    Source = Cmp ;  2 ;  1 ; 0
+                    Sink = Cmp ;  3 ;  1 ; -1
+                    PointX = -8325 ; -8325 ; -7830
+                    PointY = -3000 ; -3000 ; -3000
+                    }
+                Line
+                    {
+                    Source = Cmp ;  3 ;  1 ; 0
+                    Sink = Cmp ;  4 ;  1 ; -1
+                    PointX = -6825 ; -6825 ; -6330
+                    PointY = -3000 ; -3000 ; -3000
+                    }
+                Line
+                    {
+                    Source = Cmp ;  4 ;  1 ; 0
+                    Sink = Cmp ;  5 ;  1 ; -1
+                    PointX = -5325 ; -5325 ; -4845
+                    PointY = -3000 ; -3000 ; -3000
+                    }
+                Line
+                    {
+                    Source = Cmp ;  4 ;  2 ; 0
+                    Sink = Cmp ;  5 ;  2 ; -1
+                    PointX = -5325 ; -5325 ; -4845
+                    PointY = -3000 ; -2775 ; -2775
+                    }
+                }
+            }
+        }
+    }

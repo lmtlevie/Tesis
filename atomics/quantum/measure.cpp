@@ -14,6 +14,7 @@ if (seed == 0UL) {
 	rng.seed((unsigned)seed);
 }
 output[0] = -1.0;
+output_port = 0;
 sigma = INFINITY;
 }
 double measure::ta(double t) { return sigma; }
@@ -22,12 +23,14 @@ void measure::dext(Event e, double t) {
 QuantumWire* wire = (QuantumWire*) e.value;
 if (!wire || !wire->context) {
 	output[0] = -1.0;
+	output_port = 0;
 	sigma = processing_time;
 	return;
 }
 int outcome = wire->context->measure(wire->qubit, rng);
 output[0] = (double)outcome;
+output_port = outcome;
 sigma = processing_time;
 }
-Event measure::lambda(double t) { return Event(output, 0); }
+Event measure::lambda(double t) { return Event(output, output_port); }
 void measure::exit() {}

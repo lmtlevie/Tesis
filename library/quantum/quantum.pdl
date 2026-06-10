@@ -237,9 +237,9 @@ Coupled
         Atomic
             {
             Name = Measure
-            Ports = 1 ; 1
+            Ports = 1 ; 2
             Path = quantum\measure.h
-            Description = Projective measurement on target qubit. Collapses state and outputs the classical result 0 or 1.
+            Description = Projective measurement on target qubit. Collapses state and emits the classical result through output port 0 or 1.
             Graphic
                 {
                 Position = 0 ; 0
