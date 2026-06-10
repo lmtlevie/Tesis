@@ -1,22 +1,23 @@
-//CPP:quantum/x.cpp
-#if !defined x_h
-#define x_h
+//CPP:quantum/quantum_core.cpp
+#if !defined quantum_core_h
+#define quantum_core_h
+
 #include "simulator.h"
 #include "event.h"
 #include "stdarg.h"
 #include "time.h"
-#include "quantum_context.h"
-class x: public Simulator {
+
+class quantum_core: public Simulator {
 double sigma;
-double processing_time;
-QuantumWire wire;
+int nqubits;
 public:
-	x(const char *n): Simulator(n) {};
+	quantum_core(const char *n): Simulator(n) {};
 	void init(double, ...);
 	double ta(double t);
 	void dint(double);
-	void dext(Event , double );
+	void dext(Event, double);
 	Event lambda(double);
 	void exit();
 };
+
 #endif

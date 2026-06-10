@@ -20,145 +20,201 @@ Coupled
         {
         Atomic
             {
-            Name = GnuPlot 0
-            Ports = 2 ; 0
-            Path = sinks\gnuplot.h
-            Description = Plot input signal using GnuPlot
-            Graphic
-                {
-                Position = 5970 ; -8280
-                Dimension = 675 ; 675
-                Direction = Right
-                Color = 15
-                Icon = %sinks%gnuplot.svg
-                }
-            Parameters
-                {
-                Inputs = Str; %Inputs ; Number of inputs
-                Format = Str; set xrange [0:%tf] @ set grid @ set title 'Plot' ; General Formatting (use @ as line break)
-                Format1 = Str; with lines title 'Voltage u1' ; Formatting options for input 1
-                Format2 = Str; with lines title 'Voltage uN' ; Formatting options for input 2
-                Format3 = Str;  ; Formatting options for input 3
-                Format4 = Str;  ; Formatting options for input 4
-                Format5 = Str;  ; Formatting options for input 5
-                }
-            }
-        Atomic
-            {
-            Name = NRGen0
+            Name = Q Zero0
             Ports = 0 ; 1
-            Path = random/normal_gen.h
-            Description = Normal Random Generator
+            Path = quantum\qzero.h
+            Description = Emits a one-qubit QuantumState initialized to |0>.
             Graphic
                 {
-                Position = -8730 ; -6780
+                Position = -4830 ; 870
                 Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
-                Icon = %sources%nrgen.svg
+                Icon = %quantum%qzero.svg
                 }
             Parameters
                 {
-                mean = Str; 0 ; Mean Value
-                variance = Str; 1 ; Variance
-                T = Str; 1 ; Period
-                Random seed = Str;  ; an integer or empty string for a random seed
                 }
             }
         Atomic
             {
-            Name = Vector NRGen0
+            Name = Q Zero1
             Ports = 0 ; 1
-            Path = vector\normal_gen_vec.h
-            Description = Normal Random Generator (Vectorial)
+            Path = quantum\qzero.h
+            Description = Emits a one-qubit QuantumState initialized to |0>.
             Graphic
                 {
-                Position = -7080 ; -7755
+                Position = -4830 ; 1920
                 Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
-                Icon = %vectors%nrgen.svg
+                Icon = %quantum%qzero.svg
                 }
             Parameters
                 {
-                mean = Str; 0 ; Mean Value
-                variance = Str; 1 ; Variance
-                T = Str; 1 ; Period
-                seed = Str;  ; Integer vector or empty string for random seeds
-                Size = Str; 3 ; 
                 }
             }
         Atomic
             {
-            Name = GnuPlotXY0
-            Ports = 2 ; 0
-            Path = sink/gnuplotxy2.h
-            Description = Plot input signal using GnuPlot. This plot takes advantage of the QSS signals, therefore it doesn't need them to pass through a sample&hold block.
+            Name = CNOT0
+            Ports = 2 ; 2
+            Path = quantum\cx.h
+            Description = Controlled-NOT gate. Input 0 is control, input 1 is target.
             Graphic
                 {
-                Position = -4230 ; -5535
-                Dimension = 675 ; 720
+                Position = -1560 ; 630
+                Dimension = 2220 ; 2205
                 Direction = Right
                 Color = 15
-                Icon = %sinks%gnuplot.svg
+                Icon = %quantum%cx.svg
                 }
             Parameters
                 {
-                Format = Str; set xrange [-2:2] @ set yrange [-2:2] @ set grid @ set title 'Plot XY' ; General Formatting (use @ as line break)
-                Format1 = Str; with linespoints title 'xy' ; Formatting options
+                Processing time = Str; 0 ; 
                 }
             }
         Atomic
             {
-            Name = GnuPlotXYZ0
-            Ports = 3 ; 0
-            Path = sink/gnuplotxyz2.h
-            Description = Plot input signal using GnuPlot. This plot takes advantage of the QSS signals, therefore it doesn't need them to pass through a sample&hold block.
+            Name = Measure0
+            Ports = 1 ; 1
+            Path = quantum\measure.h
+            Description = Projective measurement on target qubit. Collapses state and stores outcome in measurements[target].
             Graphic
                 {
-                Position = -4155 ; -3555
+                Position = 2145 ; 870
                 Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
-                Icon = %sinks%gnuplot.svg
+                Icon = %quantum%measure.svg
                 }
             Parameters
                 {
-                Format = Str; set xrange [-2:2] @ set yrange [-2:2] @ set zrange [-2:2] @ set grid @ set title 'Plot XYZ' ; General Formatting (use @ as line break)
-                Format1 = Str; with linespoints title 'xyz' ; Formatting options
+                Target qubit = Str; 0 ; 
+                Processing time = Str; 0 ; 
+                Random seed = Str; 0 ; 
                 }
             }
         Atomic
             {
-            Name = GnuPlot0
-            Ports = 1 ; 0
-            Path = sinks/gnuplot.h
-            Description = Plot input signal using GnuPlot
+            Name = Measure1
+            Ports = 1 ; 1
+            Path = quantum\measure.h
+            Description = Projective measurement on target qubit. Collapses state and stores outcome in measurements[target].
             Graphic
                 {
-                Position = -4305 ; -7560
-                Dimension = 675 ; 720
+                Position = 2145 ; 1920
+                Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
-                Icon = %sinks%gnuplot.svg
+                Icon = %quantum%measure.svg
                 }
             Parameters
                 {
-                Inputs = Str; %Inputs ; Number of inputs
-                Format = Str; set xrange [0:%tf] @ set grid @ set title 'Plot' ; General Formatting (use @ as line break)
-                Format1 = Str; with lines title 'First output' ; Formatting options for input 1
-                Format2 = Str;  ; Formatting options for input 2
-                Format3 = Str;  ; Formatting options for input 3
-                Format4 = Str;  ; Formatting options for input 4
-                Format5 = Str;  ; Formatting options for input 5
+                Target qubit = Str; 0 ; 
+                Processing time = Str; 0 ; 
+                Random seed = Str; 0 ; 
+                }
+            }
+        Atomic
+            {
+            Name = H0
+            Ports = 1 ; 1
+            Path = quantum\h.h
+            Description = Hadamard gate on target qubit
+            Graphic
+                {
+                Position = -3255 ; 870
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%h.svg
+                }
+            Parameters
+                {
+                Target qubit = Str; 0 ; 
+                Processing time = Str; 0 ; 
+                }
+            }
+        Atomic
+            {
+            Name = Q Zero2
+            Ports = 0 ; 1
+            Path = quantum\qzero.h
+            Description = Emits a one-qubit QuantumState initialized to |0>.
+            Graphic
+                {
+                Position = -4830 ; 2970
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%qzero.svg
+                }
+            Parameters
+                {
+                }
+            }
+        Atomic
+            {
+            Name = Measure2
+            Ports = 1 ; 1
+            Path = quantum\measure.h
+            Description = Projective measurement on target qubit. Collapses state and stores outcome in measurements[target].
+            Graphic
+                {
+                Position = 2145 ; 2970
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%measure.svg
+                }
+            Parameters
+                {
+                Target qubit = Str; 0 ; 
+                Processing time = Str; 0 ; 
+                Random seed = Str; 0 ; 
                 }
             }
         Line
             {
             Source = Cmp ;  3 ;  1 ; 0
+            Sink = Cmp ;  4 ;  1 ; -1
+            PointX = 825 ; 825 ; 2010
+            PointY = 1200 ; 1200 ; 1200
+            }
+        Line
+            {
+            Source = Cmp ;  3 ;  2 ; 0
+            Sink = Cmp ;  5 ;  1 ; -1
+            PointX = 825 ; 825 ; 2010
+            PointY = 2250 ; 2250 ; 2250
+            }
+        Line
+            {
+            Source = Cmp ;  2 ;  1 ; 0
+            Sink = Cmp ;  3 ;  2 ; -1
+            PointX = -4050 ; -1740 ; -1740
+            PointY = 2250 ; 2250 ; 2250
+            }
+        Line
+            {
+            Source = Cmp ;  1 ;  1 ; 0
             Sink = Cmp ;  6 ;  1 ; -1
-            PointX = -6300 ; -4440 ; -4440
-            PointY = -7425 ; -7425 ; -7200
+            PointX = -4050 ; -4050 ; -3390
+            PointY = 1200 ; 1200 ; 1200
+            }
+        Line
+            {
+            Source = Cmp ;  6 ;  1 ; 0
+            Sink = Cmp ;  3 ;  1 ; -1
+            PointX = -2475 ; -1740 ; -1740
+            PointY = 1200 ; 1200 ; 1200
+            }
+        Line
+            {
+            Source = Cmp ;  7 ;  1 ; 0
+            Sink = Cmp ;  8 ;  1 ; -1
+            PointX = -4050 ; -4050 ; 2010
+            PointY = 3300 ; 3300 ; 3300
             }
         }
     }

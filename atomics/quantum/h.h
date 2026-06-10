@@ -1,17 +1,17 @@
-//CPP:quantum/id.cpp
-#if !defined id_h
-#define id_h
+//CPP:quantum/h.cpp
+#if !defined h_h
+#define h_h
 #include "simulator.h"
 #include "event.h"
 #include "stdarg.h"
 #include "time.h"
 #include "quantum_context.h"
-class id: public Simulator {
+class h: public Simulator {
 double sigma;
 double processing_time;
 QuantumWire wire;
 public:
-	id(const char *n): Simulator(n) {};
+	h(const char *n): Simulator(n) {};
 	void init(double, ...);
 	double ta(double t);
 	void dint(double);

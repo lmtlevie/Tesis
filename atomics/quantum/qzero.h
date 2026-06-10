@@ -6,12 +6,12 @@
 #include "event.h"
 #include "stdarg.h"
 #include "time.h"
-#include <complex>
+#include "quantum_context.h"
 
 class qzero: public Simulator {
-int phase;
 double sigma;
-std::complex<double> qbit[2];
+int qubit;
+QuantumWire wire;
 public:
 	qzero(const char *n): Simulator(n) {};
 	void init(double, ...);

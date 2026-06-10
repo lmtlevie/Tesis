@@ -1,21 +1,21 @@
-#include "qzero.h"
+#include "qone.h"
 #include "quantum_common.h"
 
-void qzero::init(double t,...) {
+void qone::init(double t,...) {
 	va_list p; va_start(p,t);
 	qubit = qparse_i(va_arg(p,char*));
 	wire.context = quantum_context_for(this, qubit >= 0 ? qubit + 1 : 1);
 	if (qubit < 0) qubit = wire.context->allocate_qubit();
-	wire.context->set_initial_qubit(qubit, 0);
+	wire.context->set_initial_qubit(qubit, 1);
 	wire.qubit = qubit;
 	sigma = 0;
 }
-double qzero::ta(double t) { return sigma; }
-void qzero::dint(double t) { sigma = INFINITY; }
-void qzero::dext(Event e, double t) {}
-Event qzero::lambda(double t) {
+double qone::ta(double t) { return sigma; }
+void qone::dint(double t) { sigma = INFINITY; }
+void qone::dext(Event e, double t) {}
+Event qone::lambda(double t) {
 	wire.context = quantum_context_for(this, qubit >= 0 ? qubit + 1 : 1);
 	wire.qubit = qubit;
 	return Event(&wire, 0);
 }
-void qzero::exit() {}
+void qone::exit() {}

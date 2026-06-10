@@ -1,7 +1,7 @@
 #include <stdexcept>
+#include <cstdlib>
 
 #include "gnuplot.h"
-#include "sinks/ParameterReader.h"
 
 void gnuplot::init(double t,...) {
 //The 'parameters' variable contains the parameters transferred from the editor.
@@ -9,7 +9,7 @@ va_list parameters;
 va_start(parameters,t);
 char *format[5],*gformat,buff[1024],ninput[3]="  ",Script[128];
 char *n_str=(char*) va_arg(parameters, char*);
-n = readDefaultParameterValue<int>(n_str);
+n = static_cast<int>(atof(n_str));
 gformat = (char*) va_arg(parameters, char*);
 format[0] = (char*) va_arg(parameters, char*);
 format[1] = (char*) va_arg(parameters, char*);

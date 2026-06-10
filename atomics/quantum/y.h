@@ -1,22 +1,17 @@
-//CPP:quantum/rz.cpp
-#if !defined rz_h
-#define rz_h
-
+//CPP:quantum/y.cpp
+#if !defined y_h
+#define y_h
 #include "simulator.h"
 #include "event.h"
 #include "stdarg.h"
 #include "time.h"
-#include <complex>
-
-class rz: public Simulator {
-int phase;
+#include "quantum_context.h"
+class y: public Simulator {
 double sigma;
 double processing_time;
-double theta;
-std::complex<double> state_in[2];
-std::complex<double> state_out[2];
+QuantumWire wire;
 public:
-	rz(const char *n): Simulator(n) {};
+	y(const char *n): Simulator(n) {};
 	void init(double, ...);
 	double ta(double t);
 	void dint(double);

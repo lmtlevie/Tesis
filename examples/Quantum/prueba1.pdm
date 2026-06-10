@@ -1,0 +1,253 @@
+Coupled
+    {
+    Type = Root
+    Name = prueba1
+    Ports = 0; 0
+    Description = 
+    Graphic
+        {
+        Position = 0; 0
+        Dimension = 600; 600
+        Direction = Right
+        Color = 15
+        Icon = 
+        Window = 5000; 5000; 5000; 5000
+        }
+    Parameters
+        {
+        }
+    System
+        {
+        Coupled
+            {
+            Type = Coordinator
+            Name = Quantum Circuit0
+            Ports = 0; 0
+            Description = Coupled quantum circuit workspace with one internal Quantum Core. Add gates inside this coupled model.
+            Graphic
+                {
+                Position = -2805; -405
+                Dimension = 675; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%quantum.svg
+                Window = 5000; 5000; 5000; 5000
+                }
+            Parameters
+                {
+                }
+            System
+                {
+                Atomic
+                    {
+                    Name = Quantum Core
+                    Ports = 0 ; 0
+                    Path = quantum\quantum_core.h
+                    Description = Owns the shared StateVector for this Quantum Circuit.
+                    Graphic
+                        {
+                        Position = -5430 ; -1380
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %quantum%quantum.svg
+                        }
+                    Parameters
+                        {
+                        Number of qubits = Str; 2 ; 
+                        }
+                    }
+                Atomic
+                    {
+                    Name = Q Zero0
+                    Ports = 0 ; 1
+                    Path = quantum\qzero.h
+                    Description = Emits a wire for a qubit initialized to |0> in the enclosing Quantum Circuit. Use -1 for automatic index.
+                    Graphic
+                        {
+                        Position = -9030 ; -3930
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %quantum%qzero.svg
+                        }
+                    Parameters
+                        {
+                        Qubit index = Str; -1 ; 
+                        }
+                    }
+                Atomic
+                    {
+                    Name = Q One0
+                    Ports = 0 ; 1
+                    Path = quantum\qone.h
+                    Description = Emits a wire for a qubit initialized to |1> in the enclosing Quantum Circuit. Use -1 for automatic index.
+                    Graphic
+                        {
+                        Position = -9030 ; -2880
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %quantum%qone.svg
+                        }
+                    Parameters
+                        {
+                        Qubit index = Str; -1 ; 
+                        }
+                    }
+                Atomic
+                    {
+                    Name = H0
+                    Ports = 1 ; 1
+                    Path = quantum\h.h
+                    Description = Hadamard gate on target qubit
+                    Graphic
+                        {
+                        Position = -7680 ; -3930
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %quantum%h.svg
+                        }
+                    Parameters
+                        {
+                        Processing time = Str; 0 ; 
+                        }
+                    }
+                Atomic
+                    {
+                    Name = CNOT0
+                    Ports = 2 ; 2
+                    Path = quantum\cx.h
+                    Description = Controlled-NOT gate. Input 0 is control, input 1 is target.
+                    Graphic
+                        {
+                        Position = -6270 ; -4155
+                        Dimension = 2355 ; 2160
+                        Direction = Right
+                        Color = 15
+                        Icon = %quantum%cx.svg
+                        }
+                    Parameters
+                        {
+                        Processing time = Str; 0 ; 
+                        }
+                    }
+                Atomic
+                    {
+                    Name = Measure0
+                    Ports = 1 ; 1
+                    Path = quantum\measure.h
+                    Description = Projective measurement on target qubit. Collapses state and outputs the classical result 0 or 1.
+                    Graphic
+                        {
+                        Position = -2880 ; -2880
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %quantum%measure.svg
+                        }
+                    Parameters
+                        {
+                        Processing time = Str; 0 ; 
+                        Random seed = Str; 0 ; 
+                        }
+                    }
+                Atomic
+                    {
+                    Name = Measure1
+                    Ports = 1 ; 1
+                    Path = quantum\measure.h
+                    Description = Projective measurement on target qubit. Collapses state and outputs the classical result 0 or 1.
+                    Graphic
+                        {
+                        Position = -2880 ; -3930
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %quantum%measure.svg
+                        }
+                    Parameters
+                        {
+                        Processing time = Str; 0 ; 
+                        Random seed = Str; 0 ; 
+                        }
+                    }
+                Atomic
+                    {
+                    Name = GnuPlot0
+                    Ports = 2 ; 0
+                    Path = sinks/gnuplot.h
+                    Description = Plot input signal using GnuPlot
+                    Graphic
+                        {
+                        Position = -1260 ; -4200
+                        Dimension = 2385 ; 2265
+                        Direction = Right
+                        Color = 15
+                        Icon = %sinks%gnuplot.svg
+                        }
+                    Parameters
+                        {
+                        Inputs = Str; %Inputs ; Number of inputs
+                        Format = Str; set xrange [0:%tf] @ set yrange [-0.1:1.1] @ set ytics 0,1,1 @ set grid @ set title 'Quantum measurements' ; General Formatting (use @ as line break)
+                        Format1 = Str; with impulses title 'q0' ; Formatting options for input 1
+                        Format2 = Str; with impulses title 'q1' ; Formatting options for input 2
+                        Format3 = Str;  ; Formatting options for input 3
+                        Format4 = Str;  ; Formatting options for input 4
+                        Format5 = Str;  ; Formatting options for input 5
+                        }
+                    }
+                Line
+                    {
+                    Source = Cmp ;  2 ;  1 ; 0
+                    Sink = Cmp ;  4 ;  1 ; -1
+                    PointX = -8250 ; -8250 ; -7815
+                    PointY = -3600 ; -3600 ; -3600
+                    }
+                Line
+                    {
+                    Source = Cmp ;  4 ;  1 ; 0
+                    Sink = Cmp ;  5 ;  1 ; -1
+                    PointX = -6900 ; -6900 ; -6465
+                    PointY = -3600 ; -3600 ; -3600
+                    }
+                Line
+                    {
+                    Source = Cmp ;  3 ;  1 ; 0
+                    Sink = Cmp ;  5 ;  2 ; -1
+                    PointX = -8250 ; -8250 ; -6465
+                    PointY = -2550 ; -2550 ; -2550
+                    }
+                Line
+                    {
+                    Source = Cmp ;  5 ;  2 ; 0
+                    Sink = Cmp ;  6 ;  1 ; -1
+                    PointX = -3825 ; -3015 ; -3015
+                    PointY = -2550 ; -2550 ; -2550
+                    }
+                Line
+                    {
+                    Source = Cmp ;  5 ;  1 ; 0
+                    Sink = Cmp ;  7 ;  1 ; -1
+                    PointX = -3825 ; -3825 ; -3015
+                    PointY = -3600 ; -3600 ; -3600
+                    }
+                Line
+                    {
+                    Source = Cmp ;  7 ;  1 ; 0
+                    Sink = Cmp ;  8 ;  1 ; -1
+                    PointX = -2100 ; -2100 ; -1440
+                    PointY = -3600 ; -3600 ; -3600
+                    }
+                Line
+                    {
+                    Source = Cmp ;  6 ;  1 ; 0
+                    Sink = Cmp ;  8 ;  2 ; -1
+                    PointX = -2100 ; -2100 ; -1440
+                    PointY = -2550 ; -2550 ; -2550
+                    }
+                }
+            }
+        }
+    }

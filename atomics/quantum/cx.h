@@ -1,21 +1,21 @@
-//CPP:quantum/sx.cpp
-#if !defined sx_h
-#define sx_h
-
+//CPP:quantum/cx.cpp
+#if !defined cx_h
+#define cx_h
 #include "simulator.h"
 #include "event.h"
 #include "stdarg.h"
 #include "time.h"
-#include <complex>
-
-class sx: public Simulator {
-int phase;
+#include "quantum_context.h"
+class cx: public Simulator {
 double sigma;
 double processing_time;
-std::complex<double> state_in[2];
-std::complex<double> state_out[2];
+int emit_port;
+bool has_control;
+bool has_target;
+QuantumWire control_wire;
+QuantumWire target_wire;
 public:
-	sx(const char *n): Simulator(n) {};
+	cx(const char *n): Simulator(n) {};
 	void init(double, ...);
 	double ta(double t);
 	void dint(double);

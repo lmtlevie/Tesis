@@ -3,7 +3,7 @@ Coupled
     Type = Root
     Name = Quantum
     Ports = 0; 0
-    Description = Quantum atomic models
+    Description = Quantum gate library (Phase 1 state-vector simulator)
     Graphic
         {
         Position = 0; 0
@@ -20,13 +20,73 @@ Coupled
         {
         Atomic
             {
-            Name = Qubit zero
-            Ports = 0 ; 1
-            Path = quantum\qzero.h
-            Description = Emits |0> as two complex components
+            Name = Quantum Core
+            Ports = 0 ; 0
+            Path = quantum\quantum_core.h
+            Description = Internal state-vector owner for a Quantum Circuit. Place one inside each Quantum Circuit.
             Graphic
                 {
-                Position = -3510 ; -330
+                Position = -4680 ; -1320
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%quantum.svg
+                }
+            Parameters
+                {
+                Number of qubits = Str; 2 ;
+                }
+            }
+        Coupled
+            {
+            Type = Coordinator
+            Name = Quantum Circuit
+            Ports = 0; 0
+            Description = Coupled quantum circuit workspace with one internal Quantum Core. Add gates inside this coupled model.
+            Graphic
+                {
+                Position = -4680 ; 0
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%quantum.svg
+                Window = 5000; 5000; 5000; 5000
+                }
+            Parameters
+                {
+                }
+            System
+                {
+                Atomic
+                    {
+                    Name = Quantum Core
+                    Ports = 0 ; 0
+                    Path = quantum\quantum_core.h
+                    Description = Owns the shared StateVector for this Quantum Circuit.
+                    Graphic
+                        {
+                        Position = -4200 ; -2400
+                        Dimension = 675 ; 675
+                        Direction = Right
+                        Color = 15
+                        Icon = %quantum%quantum.svg
+                        }
+                    Parameters
+                        {
+                        Number of qubits = Str; 2 ;
+                        }
+                    }
+                }
+            }
+        Atomic
+            {
+            Name = Q Zero
+            Ports = 0 ; 1
+            Path = quantum\qzero.h
+            Description = Emits a wire for a qubit initialized to |0> in the enclosing Quantum Circuit. Use -1 for automatic index.
+            Graphic
+                {
+                Position = -3510 ; -1320
                 Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
@@ -34,6 +94,26 @@ Coupled
                 }
             Parameters
                 {
+                Qubit index = Str; -1 ;
+                }
+            }
+        Atomic
+            {
+            Name = Q One
+            Ports = 0 ; 1
+            Path = quantum\qone.h
+            Description = Emits a wire for a qubit initialized to |1> in the enclosing Quantum Circuit. Use -1 for automatic index.
+            Graphic
+                {
+                Position = -2340 ; -1320
+                Dimension = 675 ; 675
+                Direction = Right
+                Color = 15
+                Icon = %quantum%qone.svg
+                }
+            Parameters
+                {
+                Qubit index = Str; -1 ;
                 }
             }
         Atomic
@@ -41,10 +121,10 @@ Coupled
             Name = ID
             Ports = 1 ; 1
             Path = quantum\id.h
-            Description = Identity gate
+            Description = Identity gate on target qubit
             Graphic
                 {
-                Position = -2340 ; -330
+                Position = -1170 ; -1320
                 Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
@@ -60,10 +140,10 @@ Coupled
             Name = X
             Ports = 1 ; 1
             Path = quantum\x.h
-            Description = Pauli-X gate
+            Description = Pauli-X gate on target qubit
             Graphic
                 {
-                Position = -1170 ; -330
+                Position = 0 ; -1320
                 Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
@@ -76,17 +156,17 @@ Coupled
             }
         Atomic
             {
-            Name = SX
+            Name = Y
             Ports = 1 ; 1
-            Path = quantum\sx.h
-            Description = Square root of X gate
+            Path = quantum\y.h
+            Description = Pauli-Y gate on target qubit
             Graphic
                 {
-                Position = 0 ; -330
+                Position = 1170 ; -1320
                 Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
-                Icon = %quantum%sx.svg
+                Icon = %quantum%y.svg
                 }
             Parameters
                 {
@@ -95,57 +175,55 @@ Coupled
             }
         Atomic
             {
-            Name = RX
+            Name = Z
             Ports = 1 ; 1
-            Path = quantum\rx.h
-            Description = Rotation around X axis
+            Path = quantum\z.h
+            Description = Pauli-Z gate on target qubit
             Graphic
                 {
-                Position = 1170 ; -330
+                Position = 2340 ; -1320
                 Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
-                Icon = %quantum%rx.svg
+                Icon = %quantum%z.svg
                 }
             Parameters
                 {
                 Processing time = Str; 0 ;
-                theta = Str; 0 ;
                 }
             }
         Atomic
             {
-            Name = RZ
+            Name = H
             Ports = 1 ; 1
-            Path = quantum\rz.h
-            Description = Rotation around Z axis
+            Path = quantum\h.h
+            Description = Hadamard gate on target qubit
             Graphic
                 {
-                Position = 2340 ; -330
+                Position = 3510 ; -1320
                 Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
-                Icon = %quantum%rz.svg
+                Icon = %quantum%h.svg
                 }
             Parameters
                 {
                 Processing time = Str; 0 ;
-                theta = Str; 0 ;
                 }
             }
         Atomic
             {
-            Name = CZ
+            Name = CNOT
             Ports = 2 ; 2
-            Path = quantum\cz.h
-            Description = Controlled-Z gate (port 0 control, port 1 target)
+            Path = quantum\cx.h
+            Description = Controlled-NOT gate. Input 0 is control, input 1 is target.
             Graphic
                 {
-                Position = -585 ; 990
+                Position = -1170 ; 0
                 Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
-                Icon = %quantum%cz.svg
+                Icon = %quantum%cx.svg
                 }
             Parameters
                 {
@@ -154,22 +232,22 @@ Coupled
             }
         Atomic
             {
-            Name = RZZ
-            Ports = 2 ; 2
-            Path = quantum\rzz.h
-            Description = Two-qubit ZZ rotation (port 0 qubit 0, port 1 qubit 1)
+            Name = Measure
+            Ports = 1 ; 1
+            Path = quantum\measure.h
+            Description = Projective measurement on target qubit. Collapses state and outputs the classical result 0 or 1.
             Graphic
                 {
-                Position = 585 ; 990
+                Position = 0 ; 0
                 Dimension = 675 ; 675
                 Direction = Right
                 Color = 15
-                Icon = %quantum%rzz.svg
+                Icon = %quantum%measure.svg
                 }
             Parameters
                 {
                 Processing time = Str; 0 ;
-                theta = Str; 0 ;
+                Random seed = Str; 0 ;
                 }
             }
         }
