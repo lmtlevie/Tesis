@@ -26,7 +26,7 @@ Coupled
             Description = Coupled quantum circuit workspace with one internal Quantum Core.
             Graphic
                 {
-                Position = -4000; -600
+                Position = -3930; -555
                 Dimension = 675; 675
                 Direction = Right
                 Color = 15
@@ -46,7 +46,7 @@ Coupled
                     Description = Owns the shared StateVector for this Quantum Circuit.
                     Graphic
                         {
-                        Position = -9000 ; -1500
+                        Position = -8955 ; -1455
                         Dimension = 675 ; 675
                         Direction = Right
                         Color = 15
@@ -54,9 +54,9 @@ Coupled
                         }
                     Parameters
                         {
-                        Number of qubits = Str; 1 ;
-                        Shots = Str; 100 ;
-                        Shot period = Str; 1 ;
+                        Number of qubits = Str; 1 ; 
+                        Shots = Str; 100 ; 
+                        Shot period = Str; 1 ; 
                         }
                     }
                 Atomic
@@ -67,7 +67,7 @@ Coupled
                     Description = Emits qubit 0 initialized to |0>.
                     Graphic
                         {
-                        Position = -9000 ; -3300
+                        Position = -9405 ; -3255
                         Dimension = 675 ; 675
                         Direction = Right
                         Color = 15
@@ -75,7 +75,7 @@ Coupled
                         }
                     Parameters
                         {
-                        Qubit index = Str; -1 ;
+                        Qubit index = Str; -1 ; 
                         }
                     }
                 Atomic
@@ -86,7 +86,7 @@ Coupled
                     Description = Hadamard gate on the only qubit.
                     Graphic
                         {
-                        Position = -7500 ; -3300
+                        Position = -7680 ; -3255
                         Dimension = 675 ; 675
                         Direction = Right
                         Color = 15
@@ -94,7 +94,7 @@ Coupled
                         }
                     Parameters
                         {
-                        Processing time = Str; 0.1 ;
+                        Processing time = Str; 0.1 ; 
                         }
                     }
                 Atomic
@@ -105,7 +105,7 @@ Coupled
                     Description = Measures the qubit. Output port 0 means result 0; output port 1 means result 1.
                     Graphic
                         {
-                        Position = -6000 ; -3300
+                        Position = -6030 ; -3255
                         Dimension = 675 ; 675
                         Direction = Right
                         Color = 15
@@ -113,19 +113,19 @@ Coupled
                         }
                     Parameters
                         {
-                        Processing time = Str; 0.1 ;
-                        Random seed = Str; 0 ;
+                        Processing time = Str; 0.1 ; 
+                        Random seed = Str; 0 ; 
                         }
                     }
                 Atomic
                     {
                     Name = Event Counter0
-                    Ports = 2 ; 0
+                    Ports = 2 ; 2
                     Path = sinks/ev_count2.h
                     Description = Counts events received at each port. Port 0 counts zeros; port 1 counts ones.
                     Graphic
                         {
-                        Position = -4500 ; -3300
+                        Position = -4485 ; -3255
                         Dimension = 720 ; 675
                         Direction = Right
                         Color = 15
@@ -137,33 +137,72 @@ Coupled
                         Inputs = Str; %Inputs ; Number of Inputs
                         }
                     }
+                Atomic
+                    {
+                    Name = GnuPlot0
+                    Ports = 2 ; 0
+                    Path = sinks/gnuplot.h
+                    Description = Plots accumulated measurement counts.
+                    Graphic
+                        {
+                        Position = -2955 ; -3255
+                        Dimension = 1620 ; 1170
+                        Direction = Right
+                        Color = 15
+                        Icon = %sinks%gnuplot.svg
+                        }
+                    Parameters
+                        {
+                        Inputs = Str; %Inputs ; Number of inputs
+                        Format = Str; set xrange [0:%tf] @ set yrange [0:100] @ set ytics 0,10,100 @ set grid ytics @ set xlabel 'simulation time' @ set ylabel 'accumulated count' @ set title 'Hadamard measurement counts' ; General Formatting (use @ as line break)
+                        Format1 = Str; with steps lw 2 lc rgb '#1f77b4' title '0 count' ; Formatting options for input 1
+                        Format2 = Str; with steps lw 2 lc rgb '#d62728' title '1 count' ; Formatting options for input 2
+                        Format3 = Str;  ; Formatting options for input 3
+                        Format4 = Str;  ; Formatting options for input 4
+                        Format5 = Str;  ; Formatting options for input 5
+                        }
+                    }
                 Line
                     {
                     Source = Cmp ;  2 ;  1 ; 0
                     Sink = Cmp ;  3 ;  1 ; -1
-                    PointX = -8325 ; -8325 ; -7830
-                    PointY = -3000 ; -3000 ; -3000
+                    PointX = -8625 ; -8625 ; -7815
+                    PointY = -2925 ; -2925 ; -2925
                     }
                 Line
                     {
                     Source = Cmp ;  3 ;  1 ; 0
                     Sink = Cmp ;  4 ;  1 ; -1
-                    PointX = -6825 ; -6825 ; -6330
-                    PointY = -3000 ; -3000 ; -3000
+                    PointX = -6900 ; -6900 ; -6165
+                    PointY = -2925 ; -2925 ; -2925
                     }
                 Line
                     {
                     Source = Cmp ;  4 ;  1 ; 0
                     Sink = Cmp ;  5 ;  1 ; -1
-                    PointX = -5325 ; -5325 ; -4845
-                    PointY = -3000 ; -3000 ; -3000
+                    PointX = -5250 ; -5250 ; -4665
+                    PointY = -3075 ; -3075 ; -3075
                     }
                 Line
                     {
                     Source = Cmp ;  4 ;  2 ; 0
                     Sink = Cmp ;  5 ;  2 ; -1
-                    PointX = -5325 ; -5325 ; -4845
-                    PointY = -3000 ; -2775 ; -2775
+                    PointX = -5250 ; -5250 ; -4665
+                    PointY = -2775 ; -2775 ; -2775
+                    }
+                Line
+                    {
+                    Source = Cmp ;  5 ;  1 ; 0
+                    Sink = Cmp ;  6 ;  1 ; -1
+                    PointX = -3765 ; -3765 ; -3090
+                    PointY = -3075 ; -3075 ; -3075
+                    }
+                Line
+                    {
+                    Source = Cmp ;  5 ;  2 ; 0
+                    Sink = Cmp ;  6 ;  2 ; -1
+                    PointX = -3765 ; -3765 ; -3090
+                    PointY = -2775 ; -2775 ; -2775
                     }
                 }
             }

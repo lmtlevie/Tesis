@@ -13,6 +13,7 @@
 class ev_count2: public Simulator { 
 double Sigma;
 double k[20];
+int emit_port;
 
 char* FName;
 int n;

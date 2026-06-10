@@ -10,19 +10,22 @@ n = (int)std::atof(n_str);
 for (int i=0;i<n;i++){
   k[i]=0;
 };
+emit_port=0;
 Sigma=1e20;
 }
 double ev_count2::ta(double t) {
 return Sigma;
 }
 void ev_count2::dint(double t) {
-
+Sigma=1e20;
 }
 void ev_count2::dext(Event x, double t) {
 k[x.port]=k[x.port]+1;
+emit_port=x.port;
+Sigma=0;
 }
 Event ev_count2::lambda(double t) {
-return Event();
+return Event(&k[emit_port], emit_port);
 }
 void ev_count2::exit() {
 FILE* FOutput = fopen(FName, "w");
